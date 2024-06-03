@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { FetchApi } from './helpers/fetchApi';
 import { FindOneDto, QueryParamsDto } from './dto';
 import * as XLSX from 'xlsx';
-import { join, resolve } from 'path';
+import { join } from 'path';
 
 @Injectable()
 export class MpPaymentsService {
@@ -10,7 +10,7 @@ export class MpPaymentsService {
 
   async findAll(queryParams: QueryParamsDto) {
     const res = await this.fetchApi.findAll(queryParams);
-    this.generateExcel(res);
+    //this.generateExcel(res);
 
     return res;
   }

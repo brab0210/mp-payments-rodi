@@ -1,7 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@nestjs/config';
-import { DataPayments, Result, ResultMP } from '../interfaces/data.interface';
+import {
+  DataPayments,
+  Result,
+  ResultMP,
+  ResultsMPObj,
+} from '../interfaces/data.interface';
 
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
@@ -17,7 +22,7 @@ export class FetchApi {
   private readonly url = this.configServices.get<string>('API_URL');
   private readonly token = this.configServices.get<string>('ACCESS_TOKEN');
 
-  async findAll(queryParams: QueryParamsDto): Promise<ResultMP[]> {
+  async findAll(queryParams: QueryParamsDto) {
     try {
       const { begin_date, end_date } = queryParams;
 
@@ -56,10 +61,12 @@ export class FetchApi {
       this.handleErrors(error);
     }
   }
-  private async narrowJson(result): Promise<ResultMP[]> {
-    let newObj = [];
+  //
+  private async narrowJson(response) {
+    let responseArray = [];
+    let responseObject = {};
 
-    result['results'].forEach((res, index) => {
+    response['results'].forEach((res, index) => {
       const {
         id,
         date_approved,
@@ -68,7 +75,7 @@ export class FetchApi {
         description,
         charges_details,
       } = res;
-      newObj.push({
+      responseArray.push({
         nro: ++index,
         id,
         date_approved,
@@ -78,7 +85,10 @@ export class FetchApi {
         charges_details,
       });
     });
-    return newObj;
+
+    responseObject['results'] = responseArray;
+    responseObject['paging'] = response['paging'];
+    return responseObject;
   }
 
   private handleErrors(error: any) {

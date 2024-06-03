@@ -9,6 +9,11 @@ export interface Paging {
   offset: number;
 }
 
+export interface ResultsMPObj {
+  results: ResultMP[];
+  paging: Paging;
+}
+
 export interface ResultMP {
   id: number;
   date_approved: Date | null;
