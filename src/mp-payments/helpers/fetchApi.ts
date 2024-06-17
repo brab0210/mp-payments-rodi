@@ -1,12 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@nestjs/config';
-import {
-  DataPayments,
-  Result,
-  ResultMP,
-  ResultsMPObj,
-} from '../interfaces/data.interface';
+import { Result } from '../interfaces/data.interface';
 
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
@@ -41,8 +36,7 @@ export class FetchApi {
           },
         }),
       );
-      const resNarrow = this.narrowJson(response.data);
-      return resNarrow;
+      return response.data;
     } catch (error) {
       this.handleErrors(error);
     }
@@ -60,35 +54,6 @@ export class FetchApi {
     } catch (error) {
       this.handleErrors(error);
     }
-  }
-  //
-  private async narrowJson(response) {
-    let responseArray = [];
-    let responseObject = {};
-
-    response['results'].forEach((res, index) => {
-      const {
-        id,
-        date_approved,
-        fee_details,
-        transaction_details,
-        description,
-        charges_details,
-      } = res;
-      responseArray.push({
-        nro: ++index,
-        id,
-        date_approved,
-        fee_details,
-        transaction_details,
-        description,
-        charges_details,
-      });
-    });
-
-    responseObject['results'] = responseArray;
-    responseObject['paging'] = response['paging'];
-    return responseObject;
   }
 
   private handleErrors(error: any) {

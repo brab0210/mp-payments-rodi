@@ -11,6 +11,11 @@ export class MpPaymentsController {
     return this.mpPaymentsService.findAll(queryParams);
   }
 
+  @Get('search-narrow')
+  findAllNarrow(@Query() queryParams: QueryParamsDto) {
+    return this.mpPaymentsService.findAllNarrow(queryParams);
+  }
+
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: FindOneDto) {
     return this.mpPaymentsService.findOne(id);

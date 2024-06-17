@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { FetchApi } from './helpers/fetchApi';
 import { FindOneDto, QueryParamsDto } from './dto';
-import * as XLSX from 'xlsx';
-import { join } from 'path';
+import { narrowResults, miniNarrowResults } from './helpers/helpers';
 
 @Injectable()
 export class MpPaymentsService {
@@ -10,22 +9,19 @@ export class MpPaymentsService {
 
   async findAll(queryParams: QueryParamsDto) {
     const res = await this.fetchApi.findAll(queryParams);
-    //this.generateExcel(res);
-
-    return res;
+    const resNarrow = await narrowResults(res);
+    return resNarrow;
   }
 
   async findOne(id: FindOneDto) {
     const res = await this.fetchApi.findOne(id);
-
     return this.fetchApi.findOne(id);
   }
 
-  generateExcel(data) {
-    const filePath = join(__dirname, 'files', 'data.xlsx');
-    const worksheet = XLSX.utils.aoa_to_sheet(data);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
-    XLSX.writeFile(workbook, filePath);
+  async findAllNarrow(queryParams: QueryParamsDto) {
+    const res = await this.fetchApi.findAll(queryParams);
+    const resNarrow = await narrowResults(res);
+    const miniResNarrow = await miniNarrowResults(resNarrow);
+    return miniResNarrow;
   }
 }
