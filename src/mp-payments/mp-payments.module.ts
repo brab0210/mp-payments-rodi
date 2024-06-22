@@ -9,5 +9,6 @@ import { HttpModule } from '@nestjs/axios';
   imports: [ConfigModule, HttpModule],
   controllers: [MpPaymentsController],
   providers: [MpPaymentsService, FetchApi],
+  exports: [MpPaymentsService],
 })
 export class MpPaymentsModule {}

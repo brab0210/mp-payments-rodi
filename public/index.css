@@ -25,6 +25,7 @@ body {
   background-color: #000;
   overflow-x: hidden;
   padding-top: 20px;
+  margin-bottom: 20px;
 }
 
 .main {
@@ -39,7 +40,7 @@ body {
 
 @media screen and (max-width: 450px) {
   .login-form {
-    margin-top: 10%;
+    margin-top: 20%;
   }
 
   .register-form {
@@ -49,7 +50,7 @@ body {
 
 @media screen and (min-width: 768px) {
   .main {
-    margin-left: 40%;
+    margin-left: 42%;
   }
 
   .sidenav {
@@ -58,10 +59,11 @@ body {
     z-index: 1;
     top: 0;
     left: 0;
+    margin-bottom: 15%;
   }
 
   .login-form {
-    margin-top: 80%;
+    margin-top: 50%;
   }
 
   .register-form {
@@ -93,4 +95,14 @@ body {
 
 .bi:hover {
   cursor: pointer;
+}
+
+.login-btn:hover {
+  color: white !important;
+}
+
+.navbar {
+  padding-top: 1.7rem !important;
+  padding-bottom: 1.7rem !important;
+  font-family: 'Roboto Mono', sans-serif;
 }

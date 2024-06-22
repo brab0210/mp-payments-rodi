@@ -9,7 +9,6 @@ export class MpPaymentsService {
 
   async findAll(queryParams: QueryParamsDto) {
     const res = await this.fetchApi.findAll(queryParams);
-
     return res;
   }
 

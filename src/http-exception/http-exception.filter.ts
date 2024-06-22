@@ -12,6 +12,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
       .switchToHttp()
       .getResponse()
       .status(exception.getStatus())
-      .sendFile('/error404.html', { root: 'public' });
+      .sendFile('/index.html', { root: 'public' });
   }
 }

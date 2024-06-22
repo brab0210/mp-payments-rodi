@@ -6,6 +6,9 @@ import { HttpModule } from '@nestjs/axios';
 
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { AuthModule } from './auth/auth.module';
+import { UserService } from './user/user.service';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -15,8 +18,10 @@ import { join } from 'path';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
+    AuthModule,
+    UserModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [UserService],
 })
 export class AppModule {}

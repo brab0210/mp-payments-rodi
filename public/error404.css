@@ -54,6 +54,7 @@ body {
   background-position: var(--x) var(--y);
   background-repeat: no-repeat;
   text-shadow: none;
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   transition: all 0.1s ease;
