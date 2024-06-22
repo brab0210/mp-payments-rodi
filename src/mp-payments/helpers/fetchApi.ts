@@ -5,7 +5,6 @@ import { Result } from '../interfaces/data.interface';
 
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
-
 import { FindOneDto, QueryParamsDto } from '../dto';
 
 @Injectable()

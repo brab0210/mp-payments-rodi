@@ -9,19 +9,20 @@ export class MpPaymentsService {
 
   async findAll(queryParams: QueryParamsDto) {
     const res = await this.fetchApi.findAll(queryParams);
-    const resNarrow = await narrowResults(res);
-    return resNarrow;
+
+    return res;
   }
 
   async findOne(id: FindOneDto) {
     const res = await this.fetchApi.findOne(id);
-    return this.fetchApi.findOne(id);
+    return res;
   }
 
   async findAllNarrow(queryParams: QueryParamsDto) {
     const res = await this.fetchApi.findAll(queryParams);
     const resNarrow = await narrowResults(res);
     const miniResNarrow = await miniNarrowResults(resNarrow);
+
     return miniResNarrow;
   }
 }

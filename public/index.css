@@ -1,9 +1,96 @@
+@import 'https://fonts.googleapis.com/css?family=Rubik+One';
+
 * {
-  box-sizing: border-box;
   padding: 0;
   margin: 0;
+  box-sizing: border-box;
+}
+/* 
+body {
+  background: linear-gradient(
+    0deg,
+    rgba(34, 193, 195, 0.4) 0%,
+    rgba(253, 187, 45, 0.4) 100%
+  );
+  min-height: 100vh;
+} */
+
+.main-head {
+  height: 150px;
+  background: #fff;
 }
 
-body {
-  background-color: rgba(196, 193, 193, 0.575);
+.sidenav {
+  height: 100%;
+  background-color: #000;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.main {
+  padding: 0px 10px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {
+    padding-top: 15px;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .login-form {
+    margin-top: 10%;
+  }
+
+  .register-form {
+    margin-top: 10%;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .main {
+    margin-left: 40%;
+  }
+
+  .sidenav {
+    width: 40%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+  }
+
+  .login-form {
+    margin-top: 80%;
+  }
+
+  .register-form {
+    margin-top: 20%;
+  }
+}
+
+.login-main-text {
+  margin-top: 20%;
+  padding: 60px;
+  color: #fff;
+}
+
+.login-main-text h2 {
+  font-weight: 300;
+}
+
+.pass {
+  position: relative;
+}
+.bi {
+  position: absolute;
+  top: 33px;
+  right: 1px;
+  padding: 6px;
+  background-color: rgb(204, 204, 204, 0.5);
+  border-left: 1px solid rgb(0, 0, 0, 0.5);
+}
+
+.bi:hover {
+  cursor: pointer;
 }

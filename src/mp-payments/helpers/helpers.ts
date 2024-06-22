@@ -67,3 +67,45 @@ export const miniNarrowResults = async function (response) {
 
   return responseObject;
 };
+
+export const html_narrow = (data, data2) => `
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/index.css" />
+<link
+  href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700&display=swap"
+  rel="stylesheet"
+/>
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/@araujoigor/json-grid/dist/json-grid.css"
+/>
+<script src="https://unpkg.com/@araujoigor/json-grid/dist/JSONGrid.min.js"></script>
+<title>MP-Payments-Rodi</title>
+</head>
+<body>
+<h1>MP-Payments</h1>
+
+<section id="container"></section>
+<br/>
+<section id="container2"></section>
+
+<script>
+    let data = ${JSON.stringify(data)}
+    let data2 = ${JSON.stringify(data2)}
+let container = document.getElementById('container');
+let container2 = document.getElementById('container2');
+
+let jsonGrid = new JSONGrid(data, container);
+let jsonGrid2 = new JSONGrid(data2, container2);
+jsonGrid.render();
+jsonGrid2.render();
+</script>
+</body>
+</html>
+`;
+
+//export const html_completo =
