@@ -1,16 +1,10 @@
-let span1 = document.getElementById('fecha_ini');
-let span2 = document.getElementById('fecha_fin');
-let date_ini = document.getElementById('date_ini');
-let date_fin = document.getElementById('date_fin');
-
 function getFecha() {
-  let fecha1 = calcFecha(date_ini, 'inicial');
-  let fecha2 = calcFecha(date_fin);
+  let date_ini = document.getElementById('date_ini');
+  let date_fin = document.getElementById('date_fin');
+  let fechaInicial = calcFecha(date_ini, 'inicial');
+  let fechaFinal = calcFecha(date_fin);
 
-  span1.innerHTML = calcFecha(date_ini, 'inicial');
-  span2.innerHTML = calcFecha(date_fin);
-
-  const url = `/mp/search-narrow?begin_date=${fecha1}&end_date=${fecha2}`;
+  const url = `/mp/search-narrow?begin_date=${fechaInicial}&end_date=${fechaFinal}`;
   window.location.href = url;
   return false;
 }

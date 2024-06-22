@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/index.css" />
+    <%- include('partials/links') %>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@araujoigor/json-grid/dist/json-grid.css"
+    />
+    <script src="https://unpkg.com/@araujoigor/json-grid/dist/JSONGrid.min.js"></script>
+
+    <title><%= title %> | MP Payments</title>
+  </head>
+  <body>
+    <h1>MP-Payments</h1>
+
+    <!-- <div class="alert alert-warning text-center p-4"> -->
+
+    <section id="container"></section>
+    <br />
+
+    <script defer>
+      let container = document.getElementById('container');
+      let dataGrid = '<%- data %>';
+
+      let jsonGrid = new JSONGrid(JSON.parse(dataGrid), container);
+      jsonGrid.render();
+    </script>
+  </body>
+</html>

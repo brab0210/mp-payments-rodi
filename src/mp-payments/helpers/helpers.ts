@@ -98,7 +98,7 @@ export const html_narrow = (data, data2) => `
     let data2 = ${JSON.stringify(data2)}
 let container = document.getElementById('container');
 let container2 = document.getElementById('container2');
-
+console.log("hola")
 let jsonGrid = new JSONGrid(data, container);
 let jsonGrid2 = new JSONGrid(data2, container2);
 jsonGrid.render();

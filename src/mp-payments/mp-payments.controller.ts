@@ -11,10 +11,30 @@ import { MpPaymentsService } from './mp-payments.service';
 import { Response } from 'express';
 import { FindOneDto, QueryParamsDto } from './dto/index';
 import { html_narrow } from './helpers/helpers';
+import { stringify } from 'querystring';
 
 @Controller('mp')
 export class MpPaymentsController {
   constructor(private readonly mpPaymentsService: MpPaymentsService) {}
+
+  @Get('login')
+  @Render('login')
+  async loginPage() {
+    return {
+      title: 'Login Page',
+    };
+  }
+
+  @Get('/')
+  @Render('main')
+  async mainPage() {
+    const queryParams = { begin_date: 'NOW-3MONTHS', end_date: 'NOW' };
+    const data = await this.mpPaymentsService.findAllNarrow(queryParams);
+    return {
+      title: 'Main Page',
+      data: JSON.stringify(data),
+    };
+  }
 
   @Get('search')
   findAll(@Query() queryParams: QueryParamsDto) {
@@ -28,20 +48,13 @@ export class MpPaymentsController {
   ) {
     const data = await this.mpPaymentsService.findAllNarrow(queryParams);
     const data2 = await this.mpPaymentsService.findAll(queryParams);
-    let html = html_narrow(data, data2);
-    res.send(html);
+
+    res.send(html_narrow(data, data2));
     //return this.mpPaymentsService.findAllNarrow(queryParams);
   }
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: FindOneDto) {
     return this.mpPaymentsService.findOne(id);
-  }
-
-  @Get('/')
-  @Render('index')
-  async indexPage() {
-    const queryParams = { begin_date: 'NOW-4MONTHS', end_date: 'NOW' };
-    const data = await this.mpPaymentsService.findAllNarrow(queryParams);
   }
 }
