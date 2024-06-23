@@ -16,7 +16,7 @@ import { FindOneDto, QueryParamsDto } from './dto/index';
 import { html_narrow } from './helpers/helpers';
 
 import { AuthGuard } from '@nestjs/passport';
-import { AuthenticatedGuard } from 'src/auth/authenticated.guard';
+import { AuthenticatedGuard } from 'src/auth/guards/authenticated.guard';
 
 @Controller('mp')
 export class MpPaymentsController {

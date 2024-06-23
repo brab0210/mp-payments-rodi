@@ -10,7 +10,7 @@ import {
 
 import { Response, Request } from 'express';
 import { MpPaymentsService } from 'src/mp-payments/mp-payments.service';
-import { LocalAuthGuard } from './local.auth.guard';
+import { LocalAuthGuard } from './guards/local.auth.guard';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -40,6 +40,10 @@ export class AuthController {
       res.clearCookie('rodiSession');
       res.redirect('login');
     });
+    /*  req.logOut(() => {
+      res.clearCookie('rodiSession');
+      res.redirect('login');
+    }); */
     //res.cookie('rodiSession', null, { maxAge: -1 });
   }
 }

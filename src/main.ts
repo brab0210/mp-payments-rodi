@@ -31,7 +31,6 @@ async function bootstrap() {
       cookie: {
         maxAge: 3600000,
         httpOnly: false,
-        sameSite: true,
       },
       name: 'rodiSession',
     }),
