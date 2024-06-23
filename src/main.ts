@@ -1,9 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import { HttpExceptionFilter } from './http-exception/http-exception.filter';
+
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
+import * as passport from 'passport';
+import * as session from 'express-session';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -21,6 +23,21 @@ async function bootstrap() {
       },
     }),
   );
+  app.use(
+    session({
+      secret: process.env.PASSWORD as string,
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        maxAge: 3600000,
+        httpOnly: false,
+        sameSite: true,
+      },
+      name: 'rodiSession',
+    }),
+  );
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   app.setBaseViewsDir(join(__dirname, '..', 'src', 'views'));
   app.setViewEngine('ejs');

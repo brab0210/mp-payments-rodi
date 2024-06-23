@@ -8,9 +8,21 @@ import { MpPaymentsService } from '../mp-payments/mp-payments.service';
 import { FetchApi } from 'src/mp-payments/helpers/fetchApi';
 import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
+import { SessionSerializer } from './session.serializer';
 @Module({
-  imports: [UserModule, PassportModule, ConfigModule, HttpModule],
+  imports: [
+    UserModule,
+    PassportModule.register({ session: true }),
+    ConfigModule,
+    HttpModule,
+  ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, MpPaymentsService, FetchApi],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    MpPaymentsService,
+    FetchApi,
+    SessionSerializer,
+  ],
 })
 export class AuthModule {}

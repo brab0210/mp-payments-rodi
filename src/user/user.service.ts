@@ -18,6 +18,7 @@ export class UserService {
   };
 
   async findOne(username: string): Promise<User | undefined> {
+    console.log({ userService: this.user });
     this.user.password = bcrypt.hashSync(this.user.password, 10);
     if (this.user.name === username) return this.user;
   }
