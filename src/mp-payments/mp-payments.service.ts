@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { FetchApi } from './helpers/fetchApi';
 import { FindOneDto, QueryParamsDto } from './dto';
-import { narrowResults, miniNarrowResults } from './helpers/helpers';
+import { funcAperturaImpuestos, miniNarrowResults } from './helpers/helpers';
 
 @Injectable()
 export class MpPaymentsService {
   constructor(private readonly fetchApi: FetchApi) {}
 
   async findAll(queryParams: QueryParamsDto) {
-    const res = await this.fetchApi.findAll(queryParams);
-    return res;
+    const { results, paging } = await this.fetchApi.findAll(queryParams);
+    return { results, paging };
   }
 
   async findOne(id: FindOneDto) {
@@ -18,10 +18,14 @@ export class MpPaymentsService {
   }
 
   async findAllNarrow(queryParams: QueryParamsDto) {
-    const res = await this.fetchApi.findAll(queryParams);
-    const resNarrow = await narrowResults(res);
-    const miniResNarrow = await miniNarrowResults(resNarrow);
+    const res = await this.findAll(queryParams);
+    const miniJson = await miniNarrowResults(res);
+    return miniJson;
+  }
 
-    return miniResNarrow;
+  async aperturaDeImpuestos(queryParams: QueryParamsDto) {
+    const findAllNarrow = await this.findAllNarrow(queryParams);
+    const res = await funcAperturaImpuestos(findAllNarrow);
+    return res;
   }
 }

@@ -17,6 +17,7 @@ import { UserModule } from './user/user.module';
     HttpModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
+      serveStaticOptions: { index: false },
     }),
     AuthModule,
     UserModule,

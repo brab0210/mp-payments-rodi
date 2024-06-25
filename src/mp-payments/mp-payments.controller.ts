@@ -40,16 +40,17 @@ export class MpPaymentsController {
     return this.mpPaymentsService.findAll(queryParams);
   }
 
-  @UseGuards(AuthenticatedGuard)
+  //  @UseGuards(AuthenticatedGuard)
   @Get('search-narrow')
   async findAllNarrow(
     @Res() res: Response,
     @Query() queryParams: QueryParamsDto,
   ) {
-    const data = await this.mpPaymentsService.findAllNarrow(queryParams);
-    const data2 = await this.mpPaymentsService.findAll(queryParams);
+    const data = await this.mpPaymentsService.findAll(queryParams);
+    const data2 = await this.mpPaymentsService.findAllNarrow(queryParams);
+    const data3 = await this.mpPaymentsService.aperturaDeImpuestos(queryParams);
 
-    res.send(html_narrow(data, data2));
+    res.send(html_narrow(data, data2, data3));
     //return this.mpPaymentsService.findAllNarrow(queryParams);
   }
 
