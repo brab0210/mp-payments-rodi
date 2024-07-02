@@ -36,6 +36,7 @@
     "class-validator": "^0.14.1",
     "ejs": "^3.1.10",
     "express-session": "^1.18.0",
+    "gridjs": "^6.2.0",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "reflect-metadata": "^0.1.13",

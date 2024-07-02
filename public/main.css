@@ -1,0 +1,65 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  /*  background: linear-gradient(
+    0deg,
+    rgba(34, 193, 195, 0.1) 0%,
+    rgba(253, 187, 45, 0.1) 100%
+  ); */
+  background-color: rgba(253, 187, 45, 0.1) !important;
+  min-height: 100vh;
+}
+
+header {
+  padding-bottom: 1rem;
+}
+
+.nav-link {
+  color: #fff;
+}
+
+.navbar {
+  background-color: rgb(131, 123, 123, 0.4);
+}
+
+.content {
+  margin-left: 1rem !important;
+}
+
+.gridjs-td a {
+  text-decoration: none;
+  color: black;
+  transition: color 0.25s ease-in-out;
+  font-weight: bold;
+}
+
+.gridjs-td a:hover {
+  color: rgb(145, 90, 9);
+}
+
+/* Let's get this party started */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
+}
+::-webkit-scrollbar-thumb:window-inactive {
+  background: rgba(0, 0, 0, 0.2);
+}

@@ -19,6 +19,7 @@ export class MpPaymentsService {
 
   async findAllNarrow(queryParams: QueryParamsDto) {
     const res = await this.findAll(queryParams);
+
     const miniJson = await miniNarrowResults(res);
     return miniJson;
   }

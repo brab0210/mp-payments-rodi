@@ -3,26 +3,75 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/index.css" />
+    <link rel="stylesheet" href="/main.css" />
+    
     <%- include('partials/links') %>
+    
 
     <title><%= title %> | MP Payments</title>
   </head>
   <body>
     <header class="mb-4"><%- include('partials/header') %></header>
-    <!-- <div class="alert alert-warning text-center p-4"> -->
-    <div class="container">
-      <div class="row col-8">
-        <section class="card" id="container"></section>
+    <main class="container-fluid">
+      <!-- <div class="alert alert-warning text-center p-4"> -->
+
+        <!-- <form action="/mp/search-narrow" method="POST" id="form" onsubmit="return getFecha()"> -->
+        <div class="row">
+          <div class="col-3">
+          
+            <h2 class="text-muted mx-1">Fecha Inicial</h2>
+            <div class="input-group">
+              <input type="date" class="form-control" id="date_ini" name="begin_date"/>
+              <div  iv class="input-group-addon">
+                <span class="glyphicon glyphicon-th"></span>
+              </div>
+           </div>
+          </div>
+        </div>
+
+        <div class="row mt-2">
+          <div class="col-3">
+            <h2 class="text-muted mx-1">Fecha Final</h2>
+              <div class="input-group">
+                <input type="date" class="form-control" id="date_fin" name="end_date"/>
+                <div class="input-group-addon">
+                <span class="glyphicon glyphicon-th"></span>
+                </div>
+              </div>
+          </div>
+        </div>
+
+        <div class="row mt-2">
+          <div class="col-3 text-center">            
+            <button class="mt-2 btn btn-outline-secondary" onclick="getFecha()" >Buscar</button>            
+          </div>
+        </div>
       </div>
-    </div>
+    <!-- </form> -->
+  
+      <div class="mt-3">
+      <h3 class="mt-3 mb-3">Tabla Reducida</h3>
+      <section class="w-100" id="contenedor"></section>
+      <hr class="mt-3" />
+      <br />
+      <h3 class="mt-3 mb-3">Tabla con Apertura</h3>
+      <section id="contenedor2"></section>
+      <hr class="mt-3" />
+      <br />     
+      </div>        
+    </main>
+    <script src="/js/fecha-helper.js"></script>
+    <script src="/js/gridJson.js"></script>
 
-    <script defer>
-      let container = document.getElementById('container');
+    <script  defer>      
       let dataGrid = '<%- data %>';
-
-      let jsonGrid = new JSONGrid(JSON.parse(dataGrid), container);
-      jsonGrid.render();
+      let dataGrid2 = '<%- data2 %>';      
+      let dataParse = JSON.parse(dataGrid)
+      let dataParse2 = JSON.parse(dataGrid2)   
+      
+      function alertTest(){
+        return alert('Esto es una prueba')
+      }
     </script>
   </body>
 </html>

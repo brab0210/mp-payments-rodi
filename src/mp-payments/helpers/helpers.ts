@@ -7,32 +7,62 @@ export const miniNarrowResults = async function (response): Promise<Object> {
     const {
       id,
       date_approved,
+      payment_type_id,
+      payer,
       fee_details,
       transaction_details,
       description,
       charges_details,
+      operation_type,
+      money_release_date,
     } = res;
     let total = 0;
     charges_details.forEach((charge) => {
-      newChargesDetails.push({
-        name: charge.name,
-        amount: charge.amounts.original,
-      });
-      total = total + charge.amounts.original;
+      if (payer == null && charge.accounts.from == 'payer') {
+        newChargesDetails.push({
+          name: charge.name,
+          account_type: charge.accounts.from,
+          amount:
+            charge.type == 'coupon'
+              ? charge.amounts.original
+              : -charge.amounts.original,
+          type: charge.type,
+        });
+        total = total + charge.amounts.original;
+      } else if (payer && charge.accounts.from == 'collector') {
+        newChargesDetails.push({
+          name: charge.name,
+          account_type: charge.accounts.from,
+          amount:
+            charge.type == 'coupon'
+              ? charge.amounts.original
+              : -charge.amounts.original,
+          type: charge.type,
+        });
+        total = total + charge.amounts.original;
+      }
     });
 
     let { net_received_amount, total_paid_amount } = transaction_details;
 
     responseArray.push({
       id,
-      date_approved,
-      description,
+      date_approved:
+        date_approved != null ? new Date(date_approved).toString() : null,
+      payment_type_id,
+      money_release_date:
+        money_release_date != null
+          ? new Date(money_release_date).toString()
+          : null,
+      cuit: payer == null ? '' : payer.identification.number,
+      description: description == null ? operation_type : description,
       fee_details,
       transaction_details,
       charges_details_total: total,
       charges_details: newChargesDetails,
-      net_received_amount,
-      total_paid_amount,
+      net_received_amount:
+        payer == null ? -net_received_amount : net_received_amount,
+      total_paid_amount: payer == null ? -total_paid_amount : total_paid_amount,
     });
   });
 
@@ -40,6 +70,45 @@ export const miniNarrowResults = async function (response): Promise<Object> {
   responseObject['results'] = responseArray;
 
   return responseObject;
+};
+
+export const funcAperturaImpuestos = async (res) => {
+  let arr = [];
+  let obj = {};
+
+  for (let index = 0; index < res.results.length; index++) {
+    const {
+      id,
+      date_approved,
+      description,
+      charges_details,
+      charges_details_total,
+      net_received_amount,
+      total_paid_amount,
+    } = res.results[index];
+    arr.push({
+      id,
+      date_approved,
+      description,
+      net_received_amount,
+      total_paid_amount,
+    });
+
+    res.results[index].charges_details.forEach((charge) => {
+      arr.push({
+        id: res.results[index].id,
+        date_approved:
+          res.results[index].date_approved != null
+            ? new Date(res.results[index].date_approved).toString()
+            : null,
+        description: 'IMPUESTO: ' + charge.type + ' | ' + charge.name,
+        net_received_amount: charge.amount,
+        total_paid_amount: '',
+      });
+    });
+  }
+  obj['resultados'] = arr;
+  return obj;
 };
 
 export const html_narrow = (data, data2, data3) => `
@@ -69,15 +138,15 @@ export const html_narrow = (data, data2, data3) => `
 <body class="container">
 <h1>MP-Payments</h1>
 
-<h3 class="mt-2 mb-2">Tabla Original</h3>
+<h3 class="mt-2 mb-2">Tabla Reducida</h3>
 <section id="container"></section>
 <hr>
 <br/>
-<h3 class="mt-2 mb-2">Tabla Reducida</h3>
+<h3 class="mt-2 mb-2">Tabla con Apertura</h3>
 <section id="container2"></section>
 <hr>
 <br/>
-<h3 class="mt-2 mb-2">Tabla con Apertura</h3>
+<h3 class="mt-2 mb-2">Tabla Original</h3>
 <section id="container3"></section>
 
 <script>
@@ -91,6 +160,7 @@ let container3 = document.getElementById('container3');
 let jsonGrid = new JSONGrid(data, container);
 let jsonGrid2 = new JSONGrid(data2, container2);
 let jsonGrid3 = new JSONGrid(data3, container3);
+
 jsonGrid.render();
 jsonGrid2.render();
 jsonGrid3.render();
@@ -98,39 +168,3 @@ jsonGrid3.render();
 </body>
 </html>
 `;
-
-export const funcAperturaImpuestos = async (res) => {
-  let arr = [];
-  let obj = {};
-
-  for (let index = 0; index < res.results.length; index++) {
-    const {
-      id,
-      date_approved,
-      description,
-      charges_details,
-      charges_details_total,
-      net_received_amount,
-      total_paid_amount,
-    } = res.results[index];
-    arr.push({
-      id,
-      date_approved,
-      description,
-      net_received_amount,
-      total_paid_amount,
-    });
-
-    res.results[index].charges_details.forEach((charge) => {
-      arr.push({
-        id: res.results[index].id,
-        date_approved: res.results[index].date_approved,
-        description: charge.name,
-        net_received_amount: '',
-        total_paid_amount: charge.amount,
-      });
-    });
-  }
-  obj['resultados'] = arr;
-  return obj;
-};

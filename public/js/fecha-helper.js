@@ -1,17 +1,25 @@
-function getFecha() {
-  let date_ini = document.getElementById('date_ini');
-  let date_fin = document.getElementById('date_fin');
-  let fechaInicial = calcFecha(date_ini, 'inicial');
-  let fechaFinal = calcFecha(date_fin);
+let date_ini = document.getElementById('date_ini');
+let date_fin = document.getElementById('date_fin');
 
-  const url = `/mp/search-narrow?begin_date=${fechaInicial}&end_date=${fechaFinal}`;
+function getFecha() {
+  if (!date_ini.value || !date_fin.value)
+    return alert('Debe elegir ambas fechas!');
+  let begin_date = calcFecha(date_ini);
+  let end_date = calcFecha(date_fin, 'final');
+
+  const url = `/mp/search-narrow?begin_date=${begin_date}&end_date=${end_date}`;
   window.location.href = url;
   return false;
 }
 
 function calcFecha(date, txt = '') {
   let fechaSeleccionada = new Date(date.value);
-  let fecha = setFecha(fechaSeleccionada, txt);
+  let fecha;
+  if (txt === 'final') {
+    fecha = setFecha(fechaSeleccionada);
+  } else {
+    fecha = fechaSeleccionada;
+  }
   let fechaISO = fecha.toISOString();
   let timezoneString = '-04:00';
   let fechaFormateada = fechaISO.slice(0, -1) + timezoneString;
@@ -19,7 +27,7 @@ function calcFecha(date, txt = '') {
   return fechaFormateada;
 }
 
-function setFecha(fecha, txt) {
+function setFecha(fecha) {
   let milisegundos = fecha.getTime();
   let dia,
     hora,
@@ -30,11 +38,7 @@ function setFecha(fecha, txt) {
   hora = 23 * 60 * 60 * 1000;
   minutos = 59 * 60 * 1000;
   segundos = 59 * 1000;
-  if (txt == 'inicial') {
-    nuevaFecha = new Date(milisegundos + hora + minutos + segundos);
-  } else {
-    nuevaFecha = new Date(milisegundos + dia + hora + minutos + segundos);
-  }
 
+  nuevaFecha = new Date(milisegundos + hora + minutos + segundos);
   return nuevaFecha;
 }

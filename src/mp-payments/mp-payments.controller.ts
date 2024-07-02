@@ -3,10 +3,8 @@ import {
   Get,
   Param,
   ParseIntPipe,
-  Post,
   Query,
   Render,
-  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -14,23 +12,25 @@ import { MpPaymentsService } from './mp-payments.service';
 import { Response } from 'express';
 import { FindOneDto, QueryParamsDto } from './dto/index';
 import { html_narrow } from './helpers/helpers';
-
-import { AuthGuard } from '@nestjs/passport';
 import { AuthenticatedGuard } from 'src/auth/guards/authenticated.guard';
 
 @Controller('mp')
 export class MpPaymentsController {
   constructor(private readonly mpPaymentsService: MpPaymentsService) {}
 
-  @UseGuards(AuthenticatedGuard)
+  //@UseGuards(AuthenticatedGuard)
   @Get('/')
   @Render('main')
   async mainPage() {
-    const queryParams = { begin_date: 'NOW-3MONTHS', end_date: 'NOW' };
+    const queryParams = { begin_date: 'NOW-2MONTHS', end_date: 'NOW' };
     const data = await this.mpPaymentsService.findAllNarrow(queryParams);
+    const data2 = await this.mpPaymentsService.aperturaDeImpuestos(queryParams);
+
     return {
       title: 'Main Page',
-      data: JSON.stringify(data),
+      data: JSON.stringify(data).replace("'", ''),
+      data2: JSON.stringify(data).replace("'", ''),
+      /*data3: JSON.stringify(data3), */
     };
   }
 
@@ -42,16 +42,27 @@ export class MpPaymentsController {
 
   //  @UseGuards(AuthenticatedGuard)
   @Get('search-narrow')
-  async findAllNarrow(
-    @Res() res: Response,
-    @Query() queryParams: QueryParamsDto,
-  ) {
-    const data = await this.mpPaymentsService.findAll(queryParams);
-    const data2 = await this.mpPaymentsService.findAllNarrow(queryParams);
-    const data3 = await this.mpPaymentsService.aperturaDeImpuestos(queryParams);
+  @Render('main')
+  async findAllNarrow(@Query() queryParams: QueryParamsDto) {
+    const data = await this.mpPaymentsService.findAllNarrow(queryParams);
+    const data2 = await this.mpPaymentsService.aperturaDeImpuestos(queryParams);
 
+    return {
+      title: 'Main Page',
+      data: JSON.stringify(data).replace("'", ''),
+      data2: JSON.stringify(data).replace("'", ''),
+    };
+  }
+
+  @Get('old')
+  async oldNarrow(@Res() res: Response, @Query() queryParams: QueryParamsDto) {
+    if (!queryParams[0]) {
+      const queryParams = { begin_date: 'NOW-1MONTHS', end_date: 'NOW' };
+    }
+    const data = await this.mpPaymentsService.findAllNarrow(queryParams);
+    const data2 = await this.mpPaymentsService.aperturaDeImpuestos(queryParams);
+    const data3 = await this.mpPaymentsService.findAll(queryParams);
     res.send(html_narrow(data, data2, data3));
-    //return this.mpPaymentsService.findAllNarrow(queryParams);
   }
 
   @UseGuards(AuthenticatedGuard)

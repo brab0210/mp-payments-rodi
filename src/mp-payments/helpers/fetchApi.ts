@@ -28,10 +28,11 @@ export class FetchApi {
           },
           params: {
             sort: 'date_created',
-            criteria: 'asc',
+            criteria: 'desc',
             range: 'date_created',
             begin_date,
             end_date,
+            limit: 1000,
           },
         }),
       );
