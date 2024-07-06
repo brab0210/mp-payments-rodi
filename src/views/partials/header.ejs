@@ -1,5 +1,15 @@
+<style>
+  .nav-link {
+    color: #fff;
+  }
+
+  .navbar {
+    background-color: var(--head-bg-color);
+    color: #fff;
+  }
+</style>
 <nav
-  class="navbar navbar-expand-lg navbar-light shadow"
+  class="navbar navbar-expand-lg shadow"
   style="
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
@@ -7,12 +17,34 @@
   "
 >
   <div class="container">
-    <h2 class="navbar-brand">MP Payments | JSON Grid</h2>
+    <h2
+      class="navbar-brand"
+      onclick="goHome()"
+      style="
+        cursor: pointer;
+        font-family: 'Proxima Nova Bold' !important;
+        padding-bottom: 0rem;
+      "
+    >
+      MP Payments | JSON Grid
+    </h2>
 
-    <ul class="navbar-nav ms-auto">
+    <ul
+      class="navbar-nav"
+      style="gap: 28px; letter-spacing: 1.2px; flex-direction: row"
+    >
       <li class="nav-item active">
-        <a class="nav-link" href="/auth/logout">Logout</a>
+        <a class="nav-link" href="/mp/old">OLD JSON</a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="/auth/logout">LOGOUT</a>
       </li>
     </ul>
   </div>
+
+  <script>
+    function goHome() {
+      window.location.href = '/mp';
+    }
+  </script>
 </nav>

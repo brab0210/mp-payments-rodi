@@ -1,4 +1,4 @@
-let grid = new gridjs.Grid({
+let gridApertura = new gridjs.Grid({
   search: {
     enabled: true,
     debounceTimeout: 5000,
@@ -8,7 +8,7 @@ let grid = new gridjs.Grid({
   resizable: true,
   fixedHeader: true,
   pagination: {
-    limit: 20,
+    limit: 50,
   },
   language: {
     search: {
@@ -58,63 +58,37 @@ let grid = new gridjs.Grid({
       name: 'Money Release Date',
       width: '184px',
     },
-    ,
-    'Payment Type Id',
-    'CUIT',
-    //'Description',
     {
       name: 'Description',
-      /*formatter: (_, row) =>
+      /* formatter: (_, row) =>
         gridjs.html(
-          `<span data-toggle="tooltip" data-placement="top" title="${row.cells[6].data}">${row.cells[6].data.length > 17 ? row.cells[6].data.substring(0, 17) : row.cells[6].data}...</span>`,
+          `<span  data-toggle="tooltip" data-placement="top" title="${row.cells[4].data}">${row.cells[4].data.length > 17 ? row.cells[4].data.substring(0, 17) : row.cells[4].data}...</span>`,
         ), */
       width: '180px',
     },
-    'Fee Amount',
-    'Total Charges',
-    /* {
-          name: 'Charges Details',
-          columns: [
-            {
-              name: 'Name',
-            },
-            {
-              name: 'Account Type',
-            },
-            {
-              name: 'Amount',
-            },
-            {
-              name: 'Type',
-            },
-          ],
-        }, */
     'Net Received Amount',
     'Total Paid Amount',
   ],
 
   data: () => {
-    return dataGridJsonFiltrada.map((item) => [
+    return dataGridJsonFiltradaApertura.map((item) => [
       item.id,
       item.date_created,
       item.date_approved,
       item.money_release_date,
-      item.payment_type_id,
-      item.cuit,
       item.description,
-      item.fee_details,
-      item.charges_details_total,
       item.net_received_amount,
       item.total_paid_amount,
     ]);
   },
 });
+//.render(document.getElementById('contenedor2'));
 setTimeout(() => {
-  grid.render(document.getElementById('contenedor'));
+  gridApertura.render(document.getElementById('contenedor2'));
 }, 1000);
 
-function testFilter(data) {
-  grid
+function testFilterApertura(data) {
+  gridApertura
     .updateConfig({
       data: () => {
         return data.map((item) => [
@@ -122,15 +96,11 @@ function testFilter(data) {
           item.date_created,
           item.date_approved,
           item.money_release_date,
-          item.payment_type_id,
-          item.cuit,
           item.description,
-          item.fee_details,
-          item.charges_details_total,
           item.net_received_amount,
           item.total_paid_amount,
         ]);
       },
     })
-    .forceRender(document.getElementById('contenedor'));
+    .forceRender(document.getElementById('contenedor2'));
 }

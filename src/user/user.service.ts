@@ -12,9 +12,10 @@ export interface User {
 export class UserService {
   constructor(private readonly configService: ConfigService) {}
 
+  private readonly passwordBuffer = this.configService.get<string>('PASSWORD');
   private readonly user: User = {
     name: this.configService.get<string>('USER'),
-    password: this.configService.get<string>('PASSWORD'),
+    password: Buffer.from(this.passwordBuffer, 'base64').toString('ascii'),
   };
 
   async findOne(username: string): Promise<User | undefined> {

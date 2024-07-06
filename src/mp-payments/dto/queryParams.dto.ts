@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
 
 export class QueryParamsDto {
   @IsString()
@@ -9,4 +9,12 @@ export class QueryParamsDto {
   @IsNotEmpty()
   @MinLength(1)
   end_date: string;
+
+  @IsOptional()
+  @IsString()
+  orderDateMoney?: string;
+
+  @IsOptional()
+  @IsString()
+  filterDateNull?: string;
 }

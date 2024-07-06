@@ -1,19 +1,8 @@
-@import 'https://fonts.googleapis.com/css?family=Rubik+One';
-
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
 }
-/* 
-body {
-  background: linear-gradient(
-    0deg,
-    rgba(34, 193, 195, 0.4) 0%,
-    rgba(253, 187, 45, 0.4) 100%
-  );
-  min-height: 100vh;
-} */
 
 .main-head {
   height: 150px;

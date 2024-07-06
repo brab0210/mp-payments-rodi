@@ -5,27 +5,18 @@ import {
   Render,
   Req,
   Res,
+  Session,
   UseGuards,
 } from '@nestjs/common';
 
 import { Response, Request } from 'express';
-import { MpPaymentsService } from 'src/mp-payments/mp-payments.service';
 import { LocalAuthGuard } from './guards/local.auth.guard';
-import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private readonly mpPaymentsService: MpPaymentsService,
-    private readonly authService: AuthService,
-  ) {}
-
   @Get('login')
-  @Render('login')
-  async loginPage() {
-    return {
-      title: 'Login Page',
-    };
+  async loginPage(@Res() res: Response) {
+    res.render('login', { title: 'Login Page' });
   }
 
   @UseGuards(LocalAuthGuard)
@@ -37,13 +28,13 @@ export class AuthController {
   @Get('logout')
   async logout(@Req() req: Request, @Res() res: Response): Promise<any> {
     req.session.destroy(() => {
+      delete req.session;
       res.clearCookie('rodiSession');
-      res.redirect('login');
+      res.redirect('/');
     });
     /*  req.logOut(() => {
       res.clearCookie('rodiSession');
-      res.redirect('login');
+      res.redirect('/mp/');
     }); */
-    //res.cookie('rodiSession', null, { maxAge: -1 });
   }
 }

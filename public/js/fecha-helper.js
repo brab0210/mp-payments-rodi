@@ -1,13 +1,40 @@
-let date_ini = document.getElementById('date_ini');
-let date_fin = document.getElementById('date_fin');
-
 function getFecha() {
+  let date_ini = document.getElementById('date_ini');
+  let date_fin = document.getElementById('date_fin');
+  let filterDate = document.getElementById('date_money');
+  if (!date_ini.value || !date_fin.value)
+    return alert('Debe elegir ambas fechas!');
+  let begin_date = calcFecha(date_ini);
+  let end_date = calcFecha(date_fin, 'final');
+  let filter = 'false';
+  if (filterDate.checked) {
+    filter = 'true';
+  }
+
+  const url = `/mp/search-narrow?begin_date=${begin_date}&end_date=${end_date}&orderDateMoney=${filter}`;
+  window.location.href = url;
+  return false;
+}
+
+function getFechaOld() {
+  let filterDate = document.getElementById('date_money');
+  let dateNullCheckbox = document.getElementById('date_approved');
   if (!date_ini.value || !date_fin.value)
     return alert('Debe elegir ambas fechas!');
   let begin_date = calcFecha(date_ini);
   let end_date = calcFecha(date_fin, 'final');
 
-  const url = `/mp/search-narrow?begin_date=${begin_date}&end_date=${end_date}`;
+  let filter = 'false';
+  let filterDateNull = 'true';
+
+  if (filterDate.checked) {
+    filter = 'true';
+  }
+  if (!dateNullCheckbox.checked) {
+    filterDateNull = 'false';
+  }
+
+  const url = `/mp/old-narrow?begin_date=${begin_date}&end_date=${end_date}&filter=${filter}&filterDateNull=${filterDateNull}`;
   window.location.href = url;
   return false;
 }

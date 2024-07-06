@@ -1,29 +1,48 @@
+:root {
+  --main-bg-color: #ededed;
+  --btn-color: #40b6ea;
+  --table-content: #4a4a4a;
+  --head-bg-color: #008ad6;
+  --tablehead-bg-color: #009ee3;
+}
+
+@font-face {
+  font-family: 'Proxima Nova';
+  src: url('/css/fonts/proximanova_regular.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Proxima Nova Light';
+  src: url('/css/fonts/proximanova_light.otf');
+  font-weight: lighter;
+  font-style: lighter;
+}
+
+@font-face {
+  font-family: 'Proxima Nova Bold';
+  src: url('/css/fonts/proximanova_bold.otf');
+  font-weight: bold;
+  font-style: bold;
+}
+
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  font-family: 'Proxima Nova' !important;
+  font-style: normal;
+  font-weight: normal;
 }
 
 body {
-  /*  background: linear-gradient(
-    0deg,
-    rgba(34, 193, 195, 0.1) 0%,
-    rgba(253, 187, 45, 0.1) 100%
-  ); */
   background-color: rgba(253, 187, 45, 0.1) !important;
   min-height: 100vh;
 }
 
 header {
   padding-bottom: 1rem;
-}
-
-.nav-link {
-  color: #fff;
-}
-
-.navbar {
-  background-color: rgb(131, 123, 123, 0.4);
 }
 
 .content {
@@ -38,7 +57,24 @@ header {
 }
 
 .gridjs-td a:hover {
-  color: rgb(145, 90, 9);
+  color: var(--head-bg-color);
+}
+
+.btn {
+  background-color: var(--tablehead-bg-color) !important;
+  color: #fff !important;
+  transition: background-color 0.2s ease-in;
+  padding: 0.5rem 2.5rem !important;
+  font-size: 18px !important;
+  letter-spacing: 1px !important;
+}
+
+.btn:hover {
+  background-color: #007eb5 !important;
+}
+
+.gridjs-pagination {
+  color: #fff !important;
 }
 
 /* Let's get this party started */
@@ -57,7 +93,8 @@ header {
 ::-webkit-scrollbar-thumb {
   -webkit-border-radius: 10px;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.4);
+  /* background: rgba(0, 0, 0, 0.4); */
+  background-color: rgb(64, 182, 234, 0.3);
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
 }
 ::-webkit-scrollbar-thumb:window-inactive {

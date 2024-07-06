@@ -7,6 +7,7 @@ export const miniNarrowResults = async function (response): Promise<Object> {
     const {
       id,
       date_approved,
+      date_created,
       payment_type_id,
       payer,
       fee_details,
@@ -48,15 +49,15 @@ export const miniNarrowResults = async function (response): Promise<Object> {
     responseArray.push({
       id,
       date_approved:
-        date_approved != null ? new Date(date_approved).toString() : null,
+        date_approved != null ? formatoDeFecha(date_approved) : null,
       payment_type_id,
+      date_created: date_created != null ? formatoDeFecha(date_created) : null,
       money_release_date:
-        money_release_date != null
-          ? new Date(money_release_date).toString()
-          : null,
-      cuit: payer == null ? '' : payer.identification.number,
+        money_release_date != null ? formatoDeFecha(money_release_date) : null,
+      cuit:
+        payer == null || payer == undefined ? '' : payer.identification?.number,
       description: description == null ? operation_type : description,
-      fee_details,
+      fee_details: payer == null ? 0 : fee_details[0]?.amount,
       transaction_details,
       charges_details_total: total,
       charges_details: newChargesDetails,
@@ -80,7 +81,9 @@ export const funcAperturaImpuestos = async (res) => {
     const {
       id,
       date_approved,
+      date_created,
       description,
+      money_release_date,
       charges_details,
       charges_details_total,
       net_received_amount,
@@ -88,7 +91,9 @@ export const funcAperturaImpuestos = async (res) => {
     } = res.results[index];
     arr.push({
       id,
+      date_created,
       date_approved,
+      money_release_date,
       description,
       net_received_amount,
       total_paid_amount,
@@ -97,10 +102,12 @@ export const funcAperturaImpuestos = async (res) => {
     res.results[index].charges_details.forEach((charge) => {
       arr.push({
         id: res.results[index].id,
+        date_created,
         date_approved:
           res.results[index].date_approved != null
-            ? new Date(res.results[index].date_approved).toString()
+            ? res.results[index].date_approved
             : null,
+        money_release_date,
         description: 'IMPUESTO: ' + charge.type + ' | ' + charge.name,
         net_received_amount: charge.amount,
         total_paid_amount: '',
@@ -111,7 +118,19 @@ export const funcAperturaImpuestos = async (res) => {
   return obj;
 };
 
-export const html_narrow = (data, data2, data3) => `
+function formatoDeFecha(dateString) {
+  const date = new Date(dateString);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+
+  return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+}
+
+export const html_narrow = (data, data2, data3, queryParams) => `
 <!doctype html>
 <html lang="en">
 <head>
@@ -133,10 +152,54 @@ export const html_narrow = (data, data2, data3) => `
 />
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/@araujoigor/json-grid/dist/JSONGrid.min.js"></script>
+
 <title>MP-Payments-Rodi</title>
 </head>
 <body class="container">
-<h1>MP-Payments</h1>
+<h1 onclick=goBack() style="cursor:pointer;">MP-Payments</h1>
+
+<div class="row">
+          <div class="col-3">
+          
+            <h2 class="text-muted mx-1">Fecha Inicial</h2>
+            <div class="input-group">
+              <input type="date" class="form-control" id="date_ini" name="begin_date" value='${queryParams.begin_date}'/>
+              <div  iv class="input-group-addon">
+                <span class="glyphicon glyphicon-th"></span>
+              </div>
+           </div>
+          </div>
+        </div>
+  
+        <div class="row mt-2">
+          <div class="col-3">
+            <h2 class="text-muted mx-1">Fecha Final</h2>
+              <div class="input-group">
+                <input type="date" class="form-control" id="date_fin" name="end_date" value='${queryParams.end_date}'/>
+                <div class="input-group-addon">
+                <span class="glyphicon glyphicon-th"></span>
+                </div>
+              </div>
+          </div>
+        </div>
+
+        <div class="row mt-2">
+          <div class="col-3 text-center">            
+            <button class="mt-2 btn btn-outline-primary " onclick="getFechaOld()" >Buscar</button>            
+          </div>
+            <div class="col-4 mt-1 ms-1">  
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="date_null" checked>
+              <label for="date_null">Filtro: date_null</label>  
+            </div>          
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="date_created">
+              <label for="date_null">Filtro: date_created</label>
+
+            </div>
+          </div>
+        </div>
+      </div>
 
 <h3 class="mt-2 mb-2">Tabla Reducida</h3>
 <section id="container"></section>
@@ -149,7 +212,12 @@ export const html_narrow = (data, data2, data3) => `
 <h3 class="mt-2 mb-2">Tabla Original</h3>
 <section id="container3"></section>
 
+
+<script src="/js/fecha-helper.js"></script>
 <script>
+function goBack(){
+window.location.href = '/mp';
+}
     let data = ${JSON.stringify(data)}
     let data2 = ${JSON.stringify(data2)}
     let data3 = ${JSON.stringify(data3)}

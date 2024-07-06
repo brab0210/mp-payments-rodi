@@ -15,21 +15,25 @@ export class FetchApi {
   ) {}
   private readonly url = this.configServices.get<string>('API_URL');
   private readonly token = this.configServices.get<string>('ACCESS_TOKEN');
-
+  private readonly tokenBuffer = Buffer.from(this.token, 'base64').toString(
+    'ascii',
+  );
   async findAll(queryParams: QueryParamsDto) {
     try {
-      const { begin_date, end_date } = queryParams;
+      const { begin_date, end_date, orderDateMoney } = queryParams;
 
       const response = await firstValueFrom(
         this.httpService.get(`${this.url}search`, {
           method: 'GET',
           headers: {
-            Authorization: `Bearer ${this.token}`,
+            Authorization: `Bearer ${this.tokenBuffer}`,
           },
           params: {
-            sort: 'date_created',
+            sort:
+              orderDateMoney == 'false' ? 'date_created' : 'money_release_date',
             criteria: 'desc',
-            range: 'date_created',
+            range:
+              orderDateMoney == 'false' ? 'date_created' : 'money_release_date',
             begin_date,
             end_date,
             limit: 1000,
