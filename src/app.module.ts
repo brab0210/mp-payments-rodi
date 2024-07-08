@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 
 import { ConfigModule } from '@nestjs/config';
 import { MpPaymentsModule } from './mp-payments/mp-payments.module';
@@ -9,6 +9,9 @@ import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
 import { UserService } from './user/user.service';
 import { UserModule } from './user/user.module';
+import { RedirectMiddleware } from './shared/redirect.middleware';
+
+import { Error404Module } from './shared/error404/error404.module';
 
 @Module({
   imports: [
@@ -21,8 +24,13 @@ import { UserModule } from './user/user.module';
     }),
     AuthModule,
     UserModule,
+    Error404Module,
   ],
   controllers: [],
   providers: [UserService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(RedirectMiddleware).forRoutes('/');
+  }
+}

@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
 
@@ -16,9 +16,11 @@ export class AuthService {
     return null;
   }
 
-  async logout(req): Promise<any> {
-    /*  delete req.session.user;
-    delete req.session; */
-    return true;
+  async logout(req, res): Promise<any> {
+    req.session.destroy(() => {
+      delete req.session;
+      res.clearCookie('rodiSession');
+      res.redirect('/');
+    });
   }
 }

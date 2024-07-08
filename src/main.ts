@@ -6,18 +6,17 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import * as passport from 'passport';
 import * as session from 'express-session';
+import { Error404Filter } from './shared/http.exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const logger = new Logger('Bootstrap');
 
-  //app.useGlobalFilters(new HttpExceptionFilter());
-
+  //app.useGlobalFilters(new Error404Filter());
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
-
       transformOptions: {
         enableImplicitConversion: true,
       },

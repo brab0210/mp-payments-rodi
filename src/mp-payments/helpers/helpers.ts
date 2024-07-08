@@ -25,22 +25,22 @@ export const miniNarrowResults = async function (response): Promise<Object> {
           account_type: charge.accounts.from,
           amount:
             charge.type == 'coupon'
-              ? charge.amounts.original
-              : -charge.amounts.original,
+              ? parseFloat(charge.amounts.original.toFixed(2))
+              : `-${parseFloat(charge.amounts.original.toFixed(2))}`,
           type: charge.type,
         });
-        total = total + charge.amounts.original;
+        total = total + parseFloat(charge.amounts.original.toFixed(2));
       } else if (payer && charge.accounts.from == 'collector') {
         newChargesDetails.push({
           name: charge.name,
           account_type: charge.accounts.from,
           amount:
             charge.type == 'coupon'
-              ? charge.amounts.original
-              : -charge.amounts.original,
+              ? parseFloat(charge.amounts.original.toFixed(2))
+              : `-${parseFloat(charge.amounts.original.toFixed(2))}`,
           type: charge.type,
         });
-        total = total + charge.amounts.original;
+        total = total + parseFloat(charge.amounts.original.toFixed(2));
       }
     });
 
@@ -109,7 +109,7 @@ export const funcAperturaImpuestos = async (res) => {
             : null,
         money_release_date,
         description: 'IMPUESTO: ' + charge.type + ' | ' + charge.name,
-        net_received_amount: charge.amount,
+        net_received_amount: charge.amount.toFixed,
         total_paid_amount: '',
       });
     });
@@ -136,7 +136,7 @@ export const html_narrow = (data, data2, data3, queryParams) => `
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="stylesheet" href="/index.css" />
+<link rel="stylesheet" href="/css/main.css" />
 <link
   href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500,700&display=swap"
   rel="stylesheet"
@@ -155,13 +155,60 @@ export const html_narrow = (data, data2, data3, queryParams) => `
 
 <title>MP-Payments-Rodi</title>
 </head>
-<body class="container">
-<h1 onclick=goBack() style="cursor:pointer;">MP-Payments</h1>
+<style>
+  .nav-link {
+    color: #fff;
+  }
 
-<div class="row">
-          <div class="col-3">
+  .navbar {
+    background-color: var(--head-bg-color);
+    color: #fff;
+  }
+</style>
+<body>
+<header class="mb-3">
+<nav
+  class="navbar navbar-expand-lg shadow"
+  style="
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    height: 5rem;
+  "
+>
+  <div class="container">
+    <h2
+      class="navbar-brand"
+      onclick="goHome()"
+      style="
+        cursor: pointer;
+        font-family: 'Proxima Nova Bold' !important;
+        padding-bottom: 0rem;
+      "
+    >
+      MP Payments | JSON Grid
+    </h2>
+
+    <ul
+      class="navbar-nav"
+      style="gap: 28px; letter-spacing: 1.2px; flex-direction: row"
+    >
+      <li class="nav-item active">
+        <a class="nav-link" href="/mp/old">OLD JSON</a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="/auth/logout">LOGOUT</a>
+      </li>
+    </ul>
+  </div>  
+  </script>
+</nav>
+</header>
+
+<main class="container-fluid">
+  <div class="row ms-2">
+          <div class="col-2">
           
-            <h2 class="text-muted mx-1">Fecha Inicial</h2>
+            <h4 class="text-muted text-center">Fecha Inicial</h4>
             <div class="input-group">
               <input type="date" class="form-control" id="date_ini" name="begin_date" value='${queryParams.begin_date}'/>
               <div  iv class="input-group-addon">
@@ -169,11 +216,8 @@ export const html_narrow = (data, data2, data3, queryParams) => `
               </div>
            </div>
           </div>
-        </div>
-  
-        <div class="row mt-2">
-          <div class="col-3">
-            <h2 class="text-muted mx-1">Fecha Final</h2>
+          <div class="col-2">
+            <h4 class="text-muted text-center">Fecha Final</h4>
               <div class="input-group">
                 <input type="date" class="form-control" id="date_fin" name="end_date" value='${queryParams.end_date}'/>
                 <div class="input-group-addon">
@@ -182,37 +226,40 @@ export const html_narrow = (data, data2, data3, queryParams) => `
               </div>
           </div>
         </div>
+         
 
         <div class="row mt-2">
-          <div class="col-3 text-center">            
-            <button class="mt-2 btn btn-outline-primary " onclick="getFechaOld()" >Buscar</button>            
+          <div class="col-2 text-center wrap-btn" style="margin-left: 0.45rem;">            
+            <button class="mt-2 btn" onclick="getFechaOld()" >Buscar</button>            
           </div>
-            <div class="col-4 mt-1 ms-1">  
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="date_null" checked>
-              <label for="date_null">Filtro: date_null</label>  
+            <div class="col-4 mt-1 ms-1" style="margin-left: 0.75rem; font-size: 14px;">  
+           <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="date_approved"  ${queryParams.orderOnlyApproved == 'true' ? 'checked' : ''}  ${queryParams.orderDateMoney == 'true' ? 'disabled' : ''}>
+              <label for="date_approved">Solo operaciones aprobadas</label>                
             </div>          
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="date_created">
-              <label for="date_null">Filtro: date_created</label>
+              <input class="form-check-input" type="checkbox" id="date_money" ${queryParams.orderDateMoney == 'true' ? 'checked' : ''}>
+              <label id="label_date_money" for="date_money">Por fecha de dinero liberado</label>
 
             </div>
           </div>
         </div>
       </div>
 
-<h3 class="mt-2 mb-2">Tabla Reducida</h3>
+      <div class="mt-4 ms-2">
+<h3 class="mt-3 mb-1 ms-1">Tabla Reducida</h3>
 <section id="container"></section>
-<hr>
+<hr class="mt-3"/>
 <br/>
-<h3 class="mt-2 mb-2">Tabla con Apertura</h3>
+<h3 class="mt-2 mb-1 ms-1">Tabla con Apertura</h3>
 <section id="container2"></section>
-<hr>
+<hr class="mt-3" />
 <br/>
-<h3 class="mt-2 mb-2">Tabla Original</h3>
+<h3 class="mt-2 mb-1 ms-1">Tabla Original</h3>
 <section id="container3"></section>
+</div> 
 
-
+</main>
 <script src="/js/fecha-helper.js"></script>
 <script>
 function goBack(){
@@ -232,6 +279,27 @@ let jsonGrid3 = new JSONGrid(data3, container3);
 jsonGrid.render();
 jsonGrid2.render();
 jsonGrid3.render();
+
+
+ let dateApprovedCheckbox = document.getElementById('date_approved')
+ let dateMoneyCheckbox = document.getElementById('date_money')
+  
+      dateMoneyCheckbox.addEventListener('change', ()=>{
+        if(dateMoneyCheckbox.checked){
+         dateApprovedCheckbox.checked = true
+          dateApprovedCheckbox.disabled = true
+          document.getElementById('label_date_money').innerHTML = "Por fecha de creación"
+
+        }
+        if(!dateMoneyCheckbox.checked){          
+          dateApprovedCheckbox.disabled = false
+          
+          document.getElementById('label_date_money').innerHTML = "Por fecha de dinero liberado"
+        }
+      })
+       function goHome() {
+      window.location.href = '/mp';
+    }
 </script>
 </body>
 </html>

@@ -2,39 +2,45 @@ function getFecha() {
   let date_ini = document.getElementById('date_ini');
   let date_fin = document.getElementById('date_fin');
   let filterDate = document.getElementById('date_money');
+  let orderApproved = document.getElementById('date_approved');
+
   if (!date_ini.value || !date_fin.value)
     return alert('Debe elegir ambas fechas!');
   let begin_date = calcFecha(date_ini);
   let end_date = calcFecha(date_fin, 'final');
   let filter = 'false';
+  let filterOrder = 'false';
+
   if (filterDate.checked) {
     filter = 'true';
   }
-
-  const url = `/mp/search-narrow?begin_date=${begin_date}&end_date=${end_date}&orderDateMoney=${filter}`;
+  if (orderApproved.checked) {
+    filterOrder = 'true';
+  }
+  const url = `/mp/search-narrow?begin_date=${begin_date}&end_date=${end_date}&orderDateMoney=${filter}&orderOnlyApproved=${filterOrder}`;
   window.location.href = url;
   return false;
 }
 
 function getFechaOld() {
   let filterDate = document.getElementById('date_money');
-  let dateNullCheckbox = document.getElementById('date_approved');
+  let orderApproved = document.getElementById('date_approved');
   if (!date_ini.value || !date_fin.value)
     return alert('Debe elegir ambas fechas!');
   let begin_date = calcFecha(date_ini);
   let end_date = calcFecha(date_fin, 'final');
 
   let filter = 'false';
-  let filterDateNull = 'true';
+  let filterOrder = 'false';
 
   if (filterDate.checked) {
     filter = 'true';
   }
-  if (!dateNullCheckbox.checked) {
-    filterDateNull = 'false';
+  if (orderApproved.checked) {
+    filterOrder = 'true';
   }
 
-  const url = `/mp/old-narrow?begin_date=${begin_date}&end_date=${end_date}&filter=${filter}&filterDateNull=${filterDateNull}`;
+  const url = `/mp/old-narrow?begin_date=${begin_date}&end_date=${end_date}&orderDateMoney=${filter}&orderOnlyApproved=${filterOrder}`;
   window.location.href = url;
   return false;
 }

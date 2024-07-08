@@ -3,6 +3,7 @@ import { FetchApi } from './helpers/fetchApi';
 import { FindOneDto, QueryParamsDto } from './dto';
 import { funcAperturaImpuestos, miniNarrowResults } from './helpers/helpers';
 import * as XLSX from 'xlsx';
+import * as fs from 'fs';
 
 @Injectable()
 export class MpPaymentsService {
@@ -31,12 +32,17 @@ export class MpPaymentsService {
     return res;
   }
 
-  async filterData(dato, dato2, dato3) {
-    let data = dato.results.filter((e) => e.date_approved != null);
-    let data2 = dato2.resultados.filter((e) => e.date_approved != null);
-    let data3 = dato3.results.filter((e) => e.date_approved != null);
-
-    return { data, data2, data3 };
+  async oldDataNullFilter(...args) {
+    const reducida = await args[0].results.filter(
+      (e) => e.date_approved != null,
+    );
+    const apertura = await args[1].resultados.filter(
+      (e) => e.date_approved != null,
+    );
+    const original = await args[2].results.filter(
+      (e) => e.date_approved != null,
+    );
+    return { reducida, apertura, original };
   }
 
   async testExcel(data) {
@@ -55,6 +61,11 @@ export class MpPaymentsService {
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet(resultsSheet);
     XLSX.utils.book_append_sheet(wb, ws, 'Results');
-    XLSX.writeFile(wb, 'resultados2.xlsx');
+    //const result = await XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
+    /*  XLSX.writeFileXLSX(wb,"resultados.xlsx").then((data)=>{
+      fs.writeFile('archivo',)
+    }) */
+
+    //return result;
   }
 }

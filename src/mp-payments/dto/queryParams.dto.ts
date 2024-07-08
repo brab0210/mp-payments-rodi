@@ -16,5 +16,5 @@ export class QueryParamsDto {
 
   @IsOptional()
   @IsString()
-  filterDateNull?: string;
+  orderOnlyApproved?: string;
 }
