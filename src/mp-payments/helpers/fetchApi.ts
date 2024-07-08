@@ -29,10 +29,10 @@ export class FetchApi {
           },
           params: {
             sort:
-              orderDateMoney == 'false' ? 'money_release_date' : 'date_created',
+              orderDateMoney == 'false' ? 'date_created' : 'money_release_date',
             criteria: 'desc',
             range:
-              orderDateMoney == 'false' ? 'money_release_date' : 'date_created',
+              orderDateMoney == 'false' ? 'date_created' : 'money_release_date',
             begin_date,
             end_date,
             limit: 1000,

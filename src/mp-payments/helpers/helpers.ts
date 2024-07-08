@@ -241,7 +241,7 @@ export const html_narrow = (data, data2, data3, queryParams) => `
             </div>          
             <div class="form-check">
               <input class="form-check-input" type="checkbox" id="date_money" ${queryParams.orderDateMoney == 'true' ? 'checked' : ''}>
-              <label id="label_date_money" for="date_money">Por fecha de dinero liberado</label>
+              <label id="label_date_money" for="date_money">${queryParams.orderDateMoney == 'true' ? 'Por fecha de creación' : 'Por fecha de dinero liberado'}</label>             
 
             </div>
           </div>

@@ -52,7 +52,7 @@
             <div class="form-check">
               <input class="form-check-input" type="checkbox" id="date_money" <%= queryParams.date_money_release == "true" ? "checked" : "" %>>
               <!-- <label id="label_date_money" for="date_money">Por fecha de dinero liberado</label> -->
-              <label id="label_date_money" for="date_money"><%= queryParams.date_money_release == "true" ? "Por fecha de creación" : "Por fecha de dinero liberado" %></label>
+              <label id="label_date_money" for="date_money"><%= queryParams.date_money_release == "true" ? "Por fecha de dinero liberado" : "Por fecha de creación" %></label>
             </div>
           </div>
         </div>
@@ -108,12 +108,12 @@
         if(dateMoneyCheckbox.checked){
          dateApprovedCheckbox.checked = true
           dateApprovedCheckbox.disabled = true
-          document.getElementById('label_date_money').innerHTML = "Por fecha de creación"
+          document.getElementById('label_date_money').innerHTML = "Por fecha de dinero liberado"
 
         }
         if(!dateMoneyCheckbox.checked){          
           dateApprovedCheckbox.disabled = false
-          document.getElementById('label_date_money').innerHTML = "Por fecha de dinero liberado"
+          document.getElementById('label_date_money').innerHTML = "Por fecha de creación"
         }
       })    
       

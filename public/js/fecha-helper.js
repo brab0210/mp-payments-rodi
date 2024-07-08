@@ -34,15 +34,19 @@ function getFechaOld() {
     return alert('Debe elegir ambas fechas!');
   let begin_date = calcFecha(date_ini);
   let end_date = calcFecha(date_fin, 'final');
-
-  let filter = 'false';
-  let filterOrder = 'false';
+  let filter;
+  let filterOrder;
 
   if (filterDate.checked) {
     filter = 'true';
+  } else {
+    filter = 'false';
   }
+
   if (orderApproved.checked) {
     filterOrder = 'true';
+  } else {
+    filterOrder = 'false';
   }
 
   const url = `/mp/old-narrow?begin_date=${begin_date}&end_date=${end_date}&orderDateMoney=${filter}&orderOnlyApproved=${filterOrder}`;
