@@ -20,7 +20,7 @@ import { DatePipe } from './helpers/date.pipe';
 export class MpPaymentsController {
   constructor(private readonly mpPaymentsService: MpPaymentsService) {}
 
-  //@UseGuards(AuthenticatedGuard)
+  @UseGuards(AuthenticatedGuard)
   @Get('/')
   @UsePipes(DatePipe)
   @Render('main')
@@ -44,7 +44,7 @@ export class MpPaymentsController {
     return this.mpPaymentsService.findAll(queryParams);
   }
 
-  //@UseGuards(AuthenticatedGuard)
+  @UseGuards(AuthenticatedGuard)
   @Get('search-narrow')
   @Render('main')
   async findAllNarrow(@Query() queryParams: QueryParamsDto) {
@@ -81,6 +81,7 @@ export class MpPaymentsController {
     res.send(html_narrow(data, data2, data3, queryParams));
   }
 
+  @UseGuards(AuthenticatedGuard)
   @Get('old-narrow')
   async oldNarrowQuery(
     @Res() res: Response,
