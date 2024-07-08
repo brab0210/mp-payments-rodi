@@ -64,7 +64,7 @@ header {
   background-color: var(--tablehead-bg-color) !important;
   color: #fff !important;
   transition: background-color 0.2s ease-in;
-  padding: 0.45rem 1.8rem !important;
+  /* padding: 0.45rem 1.8rem !important; */
   font-size: 15px !important;
   letter-spacing: 1px !important;
 }

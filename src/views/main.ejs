@@ -17,42 +17,42 @@
 
         <!-- <form action="/mp/search-narrow" method="POST" id="form" onsubmit="return getFecha()"> -->
         <div class="row ms-2">
-          <div class="col-2">
+          <div class="col-md-2 col-lg-2">
           
             <h4 class="text-muted text-center">Fecha Inicial</h4>
             <div class="input-group">
-              <input type="date" class="form-control" id="date_ini" name="begin_date" value="<%= queryParams ? queryParams.begin_date : "" %>"/>
+              <input  type="date" class="form-control" id="date_ini" name="begin_date" value="<%= queryParams ? queryParams.begin_date : "" %>"/>
               <div  iv class="input-group-addon">
                 <span class="glyphicon glyphicon-th"></span>
               </div>
            </div>
           </div>
 
-          <div class="col-2">
+          <div class="col-md-2 col-lg-2">
             <h4 class="text-muted text-center">Fecha Final</h4>
               <div class="input-group">
-                <input type="date" class="form-control" id="date_fin" name="end_date" value="<%= queryParams ? queryParams.end_date : "" %>"/>
+                <input  type="date" class="form-control" id="date_fin" name="end_date" value="<%= queryParams ? queryParams.end_date : "" %>"/>
                 <div class="input-group-addon">
                 <span class="glyphicon glyphicon-th"></span>
                 </div>
               </div>
           </div>
         </div>
-        <a href="/mp/download" class="btn">Descargar</a>
+        
         <div class="row mt-2">
-          <div class="col-2 text-center wrap-btn" style="margin-left: 0.45rem;">            
-            <button class="mt-2 btn " onclick="getFecha()" >Buscar</button>            
+          <div class="col-md-2 col-lg-2 text-center wrap-btn" style="margin-left: 0.45rem;">            
+            <button class="mt-2 col-sm-3 col-md-8 col-lg-8 btn" onclick="getFecha()" >Buscar</button>            
           </div>
           
-          <div class="col-4 mt-1 ms-1" style="margin-left: 0.75rem; font-size: 14px;">  
+          <div class="col-md-4 col-lg-4 mt-1" style="margin-left: 0.75rem; font-size: 14px;">  
             <div class="form-check">
               <input class="form-check-input" type="checkbox" id="date_approved" <%= queryParams.order_only_approved == "true" ? "checked" : "" %> <%= queryParams.date_money_release == "true" ? "disabled" : "" %>>
               <label for="date_approved">Solo operaciones aprobadas</label>                
             </div>          
             <div class="form-check">
               <input class="form-check-input" type="checkbox" id="date_money" <%= queryParams.date_money_release == "true" ? "checked" : "" %>>
-              <label id="label_date_money" for="date_money">Por fecha de dinero liberado</label>
-
+              <!-- <label id="label_date_money" for="date_money">Por fecha de dinero liberado</label> -->
+              <label id="label_date_money" for="date_money"><%= queryParams.date_money_release == "true" ? "Por fecha de creación" : "Por fecha de dinero liberado" %></label>
             </div>
           </div>
         </div>

@@ -19,7 +19,7 @@ export class DatePipe implements PipeTransform {
     const fechaInicio = new Date(Date.UTC(anio, mes - 1, 1));
     const fechaFin = new Date(Date.UTC(anio, mes, 0));
     const fechaFinMod = this.setFecha(fechaFin);
-    const zonaHoraria = '-04:00';
+    const zonaHoraria = '-03:00';
 
     const formatoFechaISO = (fecha: Date) => {
       return fecha.toISOString().replace('Z', `${zonaHoraria}`);

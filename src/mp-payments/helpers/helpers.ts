@@ -46,6 +46,8 @@ export const miniNarrowResults = async function (response): Promise<Object> {
 
     let { net_received_amount, total_paid_amount } = transaction_details;
 
+    //additional_info => items sumar unit_price
+
     responseArray.push({
       id,
       date_approved:

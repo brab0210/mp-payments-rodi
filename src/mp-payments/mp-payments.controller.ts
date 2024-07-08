@@ -15,14 +15,12 @@ import { FindOneDto, QueryParamsDto } from './dto/index';
 import { html_narrow } from './helpers/helpers';
 import { AuthenticatedGuard } from 'src/auth/guards/authenticated.guard';
 import { DatePipe } from './helpers/date.pipe';
-import * as XLSX from 'xlsx';
-import { createReadStream } from 'fs';
 
 @Controller('mp')
 export class MpPaymentsController {
   constructor(private readonly mpPaymentsService: MpPaymentsService) {}
 
-  @UseGuards(AuthenticatedGuard)
+  //@UseGuards(AuthenticatedGuard)
   @Get('/')
   @UsePipes(DatePipe)
   @Render('main')
@@ -56,6 +54,7 @@ export class MpPaymentsController {
     let end_date = queryParams.end_date.split('T')[0];
     let date_money_release = queryParams.orderDateMoney;
     let order_only_approved = queryParams.orderOnlyApproved;
+
     return {
       title: 'Main Page',
       data: JSON.stringify(data).replace("'", ''),
@@ -69,7 +68,7 @@ export class MpPaymentsController {
     };
   }
 
-  //@UseGuards(AuthenticatedGuard)
+  @UseGuards(AuthenticatedGuard)
   @Get('old')
   @UsePipes(DatePipe)
   async oldNarrow(@Res() res: Response, @Query() queryParams) {
