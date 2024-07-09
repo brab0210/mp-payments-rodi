@@ -111,7 +111,7 @@ export const funcAperturaImpuestos = async (res) => {
             : null,
         money_release_date,
         description: 'IMPUESTO: ' + charge.type + ' | ' + charge.name,
-        net_received_amount: charge.amount.toFixed,
+        net_received_amount: charge.amount,
         total_paid_amount: '',
       });
     });

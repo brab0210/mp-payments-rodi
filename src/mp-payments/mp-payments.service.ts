@@ -45,27 +45,50 @@ export class MpPaymentsService {
     return { reducida, apertura, original };
   }
 
-  async testExcel(data) {
+  async excelApertura(data) {
     const resultsSheet = [];
     data.resultados.forEach((result) => {
       const baseData = {
-        id: result.id,
-        date_approved: result.date_approved,
-        description: result.description,
-        net_received_amount: result.net_received_amount,
-        total_paid_amount: result.total_paid_amount,
+        ID: result.id,
+        'Date Created': result.date_created.split(' ')[0],
+        'Date Approved': result.date_approved.split(' ')[0],
+        'Money Release Date': result.money_release_date.split(' ')[0],
+        Description: result.description,
+        'Net Received Amount': result.net_received_amount,
+        'Total Paid Amount': result.total_paid_amount,
       };
       resultsSheet.push(baseData);
     });
 
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet(resultsSheet);
-    XLSX.utils.book_append_sheet(wb, ws, 'Results');
-    //const result = await XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
-    /*  XLSX.writeFileXLSX(wb,"resultados.xlsx").then((data)=>{
-      fs.writeFile('archivo',)
-    }) */
+    XLSX.utils.book_append_sheet(wb, ws, 'Apertura por Impuestos');
+    await XLSX.writeFileXLSX(wb, 'resultadoApertura.xlsx');
+    //return result;
+  }
+  async excelReducida(data) {
+    const resultsSheet = [];
+    data.results.forEach((result) => {
+      const baseData = {
+        ID: result.id,
+        'Date Created': result.date_created.split(' ')[0],
+        'Date Approved': result.date_approved.split(' ')[0],
+        'Money Release Date': result.money_release_date.split(' ')[0],
+        'Payment Type ID': result.payment_type_id,
+        CUIT: result.cuit,
+        Description: result.description,
+        'Fee Amount': result.fee_amount,
+        'Total Charges': result.charges_details_total,
+        'Net Received Amount': result.net_received_amount,
+        'Total Paid Amount': result.total_paid_amount,
+      };
+      resultsSheet.push(baseData);
+    });
 
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(resultsSheet);
+    XLSX.utils.book_append_sheet(wb, ws, 'Tabla Reducida');
+    await XLSX.writeFileXLSX(wb, 'resultadoReducida.xlsx');
     //return result;
   }
 }

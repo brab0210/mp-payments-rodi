@@ -15,6 +15,7 @@ import { FindOneDto, QueryParamsDto } from './dto/index';
 import { html_narrow } from './helpers/helpers';
 import { AuthenticatedGuard } from 'src/auth/guards/authenticated.guard';
 import { DatePipe } from './helpers/date.pipe';
+import { join } from 'path';
 
 @Controller('mp')
 export class MpPaymentsController {
@@ -114,18 +115,26 @@ export class MpPaymentsController {
 
   @Get('/download')
   async excelDownload(@Query() queryParams, @Res() res: Response) {
-    queryParams = {
-      begin_date: '2024-05-01T00:00:00.000-04:00',
-      end_date: '2024-07-31T23:59:59.000-04:00',
-    };
     let data = await this.mpPaymentsService.aperturaDeImpuestos(queryParams);
-    let datos = await this.mpPaymentsService.testExcel(data);
+    let datos = await this.mpPaymentsService.excelApertura(data);
+    const filepath = join(__dirname, '..', '..', 'resultadoApertura.xlsx');
 
-    res.set({
-      'Content-Type':
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'Content-Disposition': 'attachment; filename=prueba.xlsx',
-    });
+    res.download(
+      filepath,
+      `${queryParams.begin_date}_${queryParams.end_date}-Tabla_Apertura.xlsx`,
+    );
+  }
+
+  @Get('/downloadredu')
+  async excelDownloadReducida(@Query() queryParams, @Res() res: Response) {
+    let data = await this.mpPaymentsService.findAllNarrow(queryParams);
+    let datos = await this.mpPaymentsService.excelReducida(data);
+    const filepath = join(__dirname, '..', '..', 'resultadoReducida.xlsx');
+
+    res.download(
+      filepath,
+      `${queryParams.begin_date}_${queryParams.end_date}-Tabla_Reducida.xlsx`,
+    );
   }
 
   @Get('/*')
