@@ -19,7 +19,7 @@
         <div class="row ms-2">
           <div class="col-md-2 col-lg-2">
           
-            <h4 class="text-muted ms-1" style="font-size: 14px; font-weight: bold;">Fecha Inicial</h4>
+            <h4 class="text-muted ms-1 h4-style" >Fecha inicial por <span class="text-muted h4-style" id="span_date_begin">creación</span></h4>
             <div class="input-group">
               <input  type="date" class="form-control" id="date_ini" name="begin_date" value="<%= queryParams ? queryParams.begin_date : "" %>"/>
               <div  iv class="input-group-addon">
@@ -29,7 +29,7 @@
           </div>
 
           <div class="col-md-2 col-lg-2">
-            <h4 class="text-muted ms-1" style="font-size: 14px; font-weight: bold;">Fecha Final</h4>
+            <h4 class="text-muted ms-1 h4-style" id="title_end">Fecha final por <span class="text-muted h4-style" id="span_date_end">creación</span></h4>
               <div class="input-group">
                 <input  type="date" class="form-control" id="date_fin" name="end_date" value="<%= queryParams ? queryParams.end_date : "" %>"/>
                 <div class="input-group-addon">
@@ -112,16 +112,21 @@
           testFilterApertura(dataGridJsonApertura)
         }       
       })
+
+      let spanBegin = document.getElementById('span_date_begin')
+      let spanEnd = document.getElementById('span_date_end')
+
       dateMoneyCheckbox.addEventListener('change', ()=>{
         if(dateMoneyCheckbox.checked){
          dateApprovedCheckbox.checked = true
           dateApprovedCheckbox.disabled = true
-          document.getElementById('label_date_money').innerHTML = "Por fecha de dinero liberado"
-
+          spanBegin.innerHTML = "liberación"
+          spanEnd.innerHTML = "liberación"
         }
         if(!dateMoneyCheckbox.checked){          
           dateApprovedCheckbox.disabled = false
-          document.getElementById('label_date_money').innerHTML = "Por fecha de creación"
+          spanBegin.innerHTML = "creación"          
+          spanEnd.innerHTML = "creación"
         }
       })    
       

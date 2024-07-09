@@ -98,6 +98,11 @@ header {
   background-color: hsl(138, 68%, 23%);
 }
 
+.h4-style {
+  font-size: 14px;
+  font-weight: bold;
+}
+
 /* Inicio Scroll Bar styles */
 ::-webkit-scrollbar {
   width: 12px;

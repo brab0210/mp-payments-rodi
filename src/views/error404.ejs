@@ -13,7 +13,7 @@
         <p>404</p>
         404
       </h1>
-      <a href="/auth/login" class="btn">De vuelta al login</a>
+      <a href="<%= userExist ? "/mp" : "/auth/login" %>" class="btn"> <%= userExist ? "Ir a la página principal" : "Ir al login"  %></a>
     </section>
   </body>
 

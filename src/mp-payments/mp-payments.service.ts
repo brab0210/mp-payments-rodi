@@ -4,6 +4,7 @@ import { FindOneDto, QueryParamsDto } from './dto';
 import { funcAperturaImpuestos, miniNarrowResults } from './helpers/helpers';
 import * as XLSX from 'xlsx';
 import * as fs from 'fs';
+import { join } from 'path';
 
 @Injectable()
 export class MpPaymentsService {
@@ -51,8 +52,14 @@ export class MpPaymentsService {
       const baseData = {
         ID: result.id,
         'Date Created': result.date_created.split(' ')[0],
-        'Date Approved': result.date_approved.split(' ')[0],
-        'Money Release Date': result.money_release_date.split(' ')[0],
+        'Date Approved':
+          result.date_approved == null
+            ? ''
+            : result.date_approved.split(' ')[0],
+        'Money Release Date':
+          result.money_release_date == null
+            ? ''
+            : result.money_release_date.split(' ')[0],
         Description: result.description,
         'Net Received Amount': result.net_received_amount,
         'Total Paid Amount': result.total_paid_amount,
@@ -72,8 +79,14 @@ export class MpPaymentsService {
       const baseData = {
         ID: result.id,
         'Date Created': result.date_created.split(' ')[0],
-        'Date Approved': result.date_approved.split(' ')[0],
-        'Money Release Date': result.money_release_date.split(' ')[0],
+        'Date Approved':
+          result.date_approved == null
+            ? ''
+            : result.date_approved.split(' ')[0],
+        'Money Release Date':
+          result.money_release_date == null
+            ? ''
+            : result.money_release_date.split(' ')[0],
         'Payment Type ID': result.payment_type_id,
         CUIT: result.cuit,
         Description: result.description,
@@ -90,5 +103,13 @@ export class MpPaymentsService {
     XLSX.utils.book_append_sheet(wb, ws, 'Tabla Reducida');
     await XLSX.writeFileXLSX(wb, 'resultadoReducida.xlsx');
     //return result;
+  }
+
+  async leyendaExcel(queryParams) {
+    let begin_date = queryParams.begin_date.split('T')[0];
+    let end_date = queryParams.end_date.split('T')[0];
+    let leyendaExcel = `${begin_date} al ${end_date}-orderDateMoney_${queryParams.orderDateMoney}-orderOnlyApproved_${queryParams.orderOnlyApproved}`;
+
+    return leyendaExcel;
   }
 }

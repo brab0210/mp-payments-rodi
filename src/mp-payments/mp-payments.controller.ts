@@ -119,22 +119,20 @@ export class MpPaymentsController {
     let datos = await this.mpPaymentsService.excelApertura(data);
     const filepath = join(__dirname, '..', '..', 'resultadoApertura.xlsx');
 
-    res.download(
-      filepath,
-      `${queryParams.begin_date}_${queryParams.end_date}-Tabla_Apertura.xlsx`,
-    );
+    let leyendaExcel = await this.mpPaymentsService.leyendaExcel(queryParams);
+
+    res.download(filepath, `${leyendaExcel}-Tabla_Apertura.xlsx`);
   }
 
   @Get('/downloadredu')
   async excelDownloadReducida(@Query() queryParams, @Res() res: Response) {
     let data = await this.mpPaymentsService.findAllNarrow(queryParams);
+
     let datos = await this.mpPaymentsService.excelReducida(data);
     const filepath = join(__dirname, '..', '..', 'resultadoReducida.xlsx');
+    let leyendaExcel = await this.mpPaymentsService.leyendaExcel(queryParams);
 
-    res.download(
-      filepath,
-      `${queryParams.begin_date}_${queryParams.end_date}-Tabla_Reducida.xlsx`,
-    );
+    res.download(filepath, `${leyendaExcel}-Tabla_Reducida.xlsx`);
   }
 
   @Get('/*')
