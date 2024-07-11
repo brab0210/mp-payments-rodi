@@ -66,6 +66,7 @@ let gridApertura = new gridjs.Grid({
         ), */
       width: '180px',
     },
+    'Add info',
     'Net Received Amount',
     'Total Paid Amount',
   ],
@@ -77,6 +78,7 @@ let gridApertura = new gridjs.Grid({
       item.date_approved,
       item.money_release_date,
       item.description,
+      item.additional_info,
       item.net_received_amount,
       item.total_paid_amount,
     ]);

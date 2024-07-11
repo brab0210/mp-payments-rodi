@@ -72,23 +72,7 @@ let grid = new gridjs.Grid({
     },
     'Fee Amount',
     'Total Charges',
-    /* {
-          name: 'Charges Details',
-          columns: [
-            {
-              name: 'Name',
-            },
-            {
-              name: 'Account Type',
-            },
-            {
-              name: 'Amount',
-            },
-            {
-              name: 'Type',
-            },
-          ],
-        }, */
+    'Additional Info',
     'Net Received Amount',
     'Total Paid Amount',
   ],
@@ -104,6 +88,7 @@ let grid = new gridjs.Grid({
       item.description,
       item.fee_details,
       item.charges_details_total,
+      item.additional_info,
       item.net_received_amount,
       item.total_paid_amount,
     ]);
@@ -127,6 +112,7 @@ function testFilter(data) {
           item.description,
           item.fee_details,
           item.charges_details_total,
+          item.additional_info,
           item.net_received_amount,
           item.total_paid_amount,
         ]);

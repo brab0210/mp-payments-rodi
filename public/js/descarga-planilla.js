@@ -51,6 +51,33 @@ function getExcelReducida() {
   return false;
 }
 
+function getExcelExtracto() {
+  let date_ini = document.getElementById('date_ini');
+  let date_fin = document.getElementById('date_fin');
+  let filterDate = document.getElementById('date_money');
+  let orderApproved = document.getElementById('date_approved');
+
+  let begin_date = calcFecha(date_ini);
+  let end_date = calcFecha(date_fin, 'final');
+  let filter;
+  let filterOrder;
+
+  if (filterDate.checked) {
+    filter = 'true';
+  } else {
+    filter = 'false';
+  }
+
+  if (orderApproved.checked) {
+    filterOrder = 'true';
+  } else {
+    filterOrder = 'false';
+  }
+  const url = `/mp/downloadredu?begin_date=${begin_date}&end_date=${end_date}&orderDateMoney=${filter}&orderOnlyApproved=${filterOrder}`;
+  window.location.href = url;
+  return false;
+}
+
 function calcFecha(date, txt = '') {
   let fechaSeleccionada = new Date(date.value);
   let fecha;

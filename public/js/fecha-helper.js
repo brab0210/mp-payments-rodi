@@ -22,6 +22,7 @@ function getFecha() {
   } else {
     filterOrder = 'false';
   }
+
   const url = `/mp/search-narrow?begin_date=${begin_date}&end_date=${end_date}&orderDateMoney=${filter}&orderOnlyApproved=${filterOrder}`;
   window.location.href = url;
   return false;

@@ -16,6 +16,7 @@ export const miniNarrowResults = async function (response): Promise<Object> {
       charges_details,
       operation_type,
       money_release_date,
+      additional_info,
     } = res;
     let total = 0;
     charges_details.forEach((charge) => {
@@ -47,7 +48,14 @@ export const miniNarrowResults = async function (response): Promise<Object> {
     let { net_received_amount, total_paid_amount } = transaction_details;
 
     //additional_info => items sumar unit_price
-
+    let add_unit_price = 0;
+    if (payer == null) {
+      if (additional_info.items && additional_info.items[0].unit_price) {
+        additional_info.items.map(({ unit_price }) => {
+          add_unit_price += parseFloat(unit_price);
+        });
+      }
+    }
     responseArray.push({
       id,
       date_approved:
@@ -63,9 +71,18 @@ export const miniNarrowResults = async function (response): Promise<Object> {
       transaction_details,
       charges_details_total: total,
       charges_details: newChargesDetails,
+      additional_info:
+        payer == null
+          ? -parseFloat(add_unit_price.toFixed(2))
+          : parseFloat(add_unit_price.toFixed(2)),
       net_received_amount:
-        payer == null ? -net_received_amount : net_received_amount,
-      total_paid_amount: payer == null ? -total_paid_amount : total_paid_amount,
+        payer == null
+          ? -parseFloat(net_received_amount.toFixed(2))
+          : parseFloat(net_received_amount.toFixed(2)),
+      total_paid_amount:
+        payer == null
+          ? -parseFloat(total_paid_amount.toFixed(2))
+          : parseFloat(total_paid_amount.toFixed(2)),
     });
   });
 
@@ -90,6 +107,7 @@ export const funcAperturaImpuestos = async (res) => {
       charges_details_total,
       net_received_amount,
       total_paid_amount,
+      additional_info,
     } = res.results[index];
     arr.push({
       id,
@@ -97,6 +115,7 @@ export const funcAperturaImpuestos = async (res) => {
       date_approved,
       money_release_date,
       description,
+      additional_info,
       net_received_amount,
       total_paid_amount,
     });
