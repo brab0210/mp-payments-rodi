@@ -87,7 +87,7 @@ let gridApertura = new gridjs.Grid({
 //.render(document.getElementById('contenedor2'));
 setTimeout(() => {
   gridApertura.render(document.getElementById('contenedor2'));
-}, 1000);
+}, 2000);
 
 function testFilterApertura(data) {
   gridApertura

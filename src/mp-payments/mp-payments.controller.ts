@@ -135,6 +135,17 @@ export class MpPaymentsController {
     res.download(filepath, `${leyendaExcel}-Tabla_Reducida.xlsx`);
   }
 
+  @Get('/downloadextracto')
+  async excelExtracto(@Query() queryParams, @Res() res: Response) {
+    let data = await this.mpPaymentsService.aperturaDeImpuestos(queryParams);
+    let datos = await this.mpPaymentsService.excelExtracto(data);
+    const filepath = join(__dirname, '..', '..', 'resultadoExtracto.xlsx');
+
+    let leyendaExcel = await this.mpPaymentsService.leyendaExcel(queryParams);
+
+    res.download(filepath, `${leyendaExcel}-Tabla_Extracto.xlsx`);
+  }
+
   @Get('/*')
   test(@Res() res: Response) {
     return res.redirect('/error404');

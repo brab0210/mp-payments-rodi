@@ -87,7 +87,7 @@
             <span>Exportar Tabla</span>
             <img class="excel_icon" src="/images/excel.svg" alt="excel_icon">       
           </button>
-          <button class="btn-excel btn_extracto" onclick="getExcelReducida()">
+          <button class="btn-excel btn_extracto" onclick="getExcelExtracto()">
             <span>Extracto Bancario</span>
             <img class="excel_icon" src="/images/excel.svg" alt="excel_icon">            
           </button>  
@@ -106,7 +106,21 @@
     
     let dateMoneyCheckbox = document.getElementById('date_money')
     let dateApprovedCheckbox = document.getElementById('date_approved')
+
+    let spanBegin = document.getElementById('span_date_begin')
+    let spanEnd = document.getElementById('span_date_end')
+
     dateApprovedCheckbox.disabled = true
+
+    if(dateApprovedCheckbox.checked){
+      dateApprovedCheckbox.disabled = false
+        spanBegin.innerHTML = "creación"
+          spanEnd.innerHTML = "creación"    }
+
+    if(!dateMoneyCheckbox.checked){
+          spanBegin.innerHTML = "liberación"          
+          spanEnd.innerHTML = "liberación"
+    }
       
       let dataReducida = '<%- data %>';       
       let dataReducidaParse = JSON.parse(dataReducida)     
@@ -134,8 +148,7 @@
         }       
       })
 
-      let spanBegin = document.getElementById('span_date_begin')
-      let spanEnd = document.getElementById('span_date_end')
+      
 
       dateMoneyCheckbox.addEventListener('change', ()=>{
         if(dateMoneyCheckbox.checked){

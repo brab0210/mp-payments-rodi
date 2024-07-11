@@ -105,6 +105,28 @@ export class MpPaymentsService {
     //return result;
   }
 
+  async excelExtracto(data) {
+    // fecha description importe saldo
+    const resultsSheet = [];
+    data.resultados.forEach((result) => {
+      const baseData = {
+        Fecha:
+          result.date_approved == null
+            ? ''
+            : result.date_approved.split(' ')[0],
+        Description: result.description,
+        Importe: result.net_received_amount,
+        Saldo: 0,
+      };
+      resultsSheet.push(baseData);
+    });
+
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(resultsSheet);
+    XLSX.utils.book_append_sheet(wb, ws, 'Extracto Bancario');
+    await XLSX.writeFileXLSX(wb, 'resultadoExtracto.xlsx');
+  }
+
   async leyendaExcel(queryParams) {
     let begin_date = queryParams.begin_date.split('T')[0];
     let end_date = queryParams.end_date.split('T')[0];

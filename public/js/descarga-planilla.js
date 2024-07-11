@@ -63,9 +63,9 @@ function getExcelExtracto() {
   let filterOrder;
 
   if (filterDate.checked) {
-    filter = 'true';
-  } else {
     filter = 'false';
+  } else {
+    filter = 'true';
   }
 
   if (orderApproved.checked) {
@@ -73,7 +73,7 @@ function getExcelExtracto() {
   } else {
     filterOrder = 'false';
   }
-  const url = `/mp/downloadredu?begin_date=${begin_date}&end_date=${end_date}&orderDateMoney=${filter}&orderOnlyApproved=${filterOrder}`;
+  const url = `/mp/downloadextracto?begin_date=${begin_date}&end_date=${end_date}&orderDateMoney=${filter}&orderOnlyApproved=${filterOrder}`;
   window.location.href = url;
   return false;
 }

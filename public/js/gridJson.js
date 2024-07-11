@@ -96,7 +96,7 @@ let grid = new gridjs.Grid({
 });
 setTimeout(() => {
   grid.render(document.getElementById('contenedor'));
-}, 1000);
+}, 2000);
 
 function testFilter(data) {
   grid

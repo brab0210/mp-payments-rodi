@@ -49,6 +49,8 @@ export const miniNarrowResults = async function (response): Promise<Object> {
 
     //additional_info => items sumar unit_price
     let add_unit_price = 0;
+    let net_rec_amount = 0;
+
     if (payer == null) {
       if (additional_info.items && additional_info.items[0].unit_price) {
         additional_info.items.map(({ unit_price }) => {
@@ -56,6 +58,7 @@ export const miniNarrowResults = async function (response): Promise<Object> {
         });
       }
     }
+
     responseArray.push({
       id,
       date_approved:
@@ -75,9 +78,10 @@ export const miniNarrowResults = async function (response): Promise<Object> {
         payer == null
           ? -parseFloat(add_unit_price.toFixed(2))
           : parseFloat(add_unit_price.toFixed(2)),
+
       net_received_amount:
         payer == null
-          ? -parseFloat(net_received_amount.toFixed(2))
+          ? -parseFloat(add_unit_price.toFixed(2))
           : parseFloat(net_received_amount.toFixed(2)),
       total_paid_amount:
         payer == null
