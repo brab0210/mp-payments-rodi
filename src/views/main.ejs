@@ -13,13 +13,11 @@
   <body>
     <header class="mb-3"><%- include('partials/header') %></header>
     <main class="container-fluid">
-      <!-- <div class="alert alert-warning text-center p-4"> -->
-
-        <!-- <form action="/mp/search-narrow" method="POST" id="form" onsubmit="return getFecha()"> -->
+      
         <div class="row ms-2">
           <div class="col-md-2 col-lg-2">
           
-            <h4 class="text-muted ms-1 h4-style" >Fecha inicial por <span class="text-muted h4-style" id="span_date_begin">creación</span></h4>
+            <h4 class="text-muted ms-1 h4-style" >Fecha inicial por <span class="text-muted h4-style" id="span_date_begin">liberación</span></h4>
             <div class="input-group">
               <input  type="date" class="form-control" id="date_ini" name="begin_date" value="<%= queryParams ? queryParams.begin_date : "" %>"/>
               <div  iv class="input-group-addon">
@@ -29,7 +27,7 @@
           </div>
 
           <div class="col-md-2 col-lg-2">
-            <h4 class="text-muted ms-1 h4-style" id="title_end">Fecha final por <span class="text-muted h4-style" id="span_date_end">creación</span></h4>
+            <h4 class="text-muted ms-1 h4-style" id="title_end">Fecha final por <span class="text-muted h4-style" id="span_date_end">liberación</span></h4>
               <div class="input-group">
                 <input  type="date" class="form-control" id="date_fin" name="end_date" value="<%= queryParams ? queryParams.end_date : "" %>"/>
                 <div class="input-group-addon">
@@ -41,40 +39,47 @@
         
         <div class="row mt-2">
           <div class="col-md-2 col-lg-2 wrap-btn">            
-            <button class="mt-2 col-sm-3 col-md-8 col-lg-8 btn" onclick="getFecha()" style="margin-left: 1.25rem;">Buscar</button>            
+            <button class="mt-2 col-sm-3 col-md-8 col-lg-8 btn" onclick="getFecha()" style="margin-left: 1.25rem;">Buscar</button>                        
           </div>
           
           <div class="col-md-4 col-lg-4 mt-1" style="margin-left: 1.15rem; font-size: 13px;">  
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="date_approved" <%= queryParams.order_only_approved == "true" ? "checked" : "" %> <%= queryParams.date_money_release == "true" ? "disabled" : "" %>>
+              <input class="form-check-input" type="checkbox" id="date_approved" <%= queryParams.order_only_approved == "true" ? "checked" : "" %>>
               <label for="date_approved">Solo operaciones aprobadas</label>                
             </div>          
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="date_money" <%= queryParams.date_money_release == "true" ? "checked" : "" %>>
-              <!-- <label id="label_date_money" for="date_money">Por fecha de dinero liberado</label> -->
-              <label id="label_date_money" for="date_money"><%= queryParams.date_money_release == "true" ? "Por fecha de dinero liberado" : "Por fecha de creación" %></label>
+              <input class="form-check-input" type="checkbox" id="date_money" <%= queryParams.date_money_release == "true" ? "checked" : "" %>>              
+              <label id="label_date_money" for="date_money">Por fecha de creación</label>
             </div>
           </div>
-        </div>
-      </div>
-    <!-- </form> -->
+        </div>    
   
       <div class="mt-4 ms-2">
-      <h3 class="mt-3 mb-1 ms-1" style="font-size: 20px;">Tabla Reducida</h3>
-      <div class="wrapper-btn-conenedor" style="position: relative;">
-      <button class="btn-excel" onclick="getExcelReducida()">Exportar Tabla</button>
-      <section class="w-100" id="contenedor"></section>           
-    
-    </div>
-      <hr class="mt-3" />
-      <br />
-      <h3 class="mt-2 mb-1 ms-1" style="font-size: 20px;">Tabla con Apertura</h3>
-      <div class="wrapper-btn-conenedor" style="position: relative;">
-        <button class="btn-excel" onclick="getExcelApertura()">Exportar Tabla</button>
-      <section id="contenedor2"></section>
-      </div>
-      <hr class="mt-3" />
-      <br />     
+        <h3 class="mt-3 mb-1 ms-1" style="font-size: 20px;">Tabla Reducida</h3>
+        <div class="wrapper-btn-conenedor" style="position: relative;">
+          
+            <button class="btn-excel" onclick="getExcelReducida()">
+              Exportar Tabla
+              <img class="excel_icon" src="/images/excel.svg" alt="excel_icon">            
+            </button>
+          
+
+          <section class="w-100" id="contenedor"></section>
+        </div>
+
+        <hr class="mt-3" />
+        <br />
+
+        <h3 class="mt-2 mb-1 ms-1" style="font-size: 20px;">Tabla con Apertura</h3>
+        <div class="wrapper-btn-conenedor" style="position: relative;">
+          <button class="btn-excel" onclick="getExcelApertura()">
+            Exportar Tabla
+            <img class="excel_icon" src="/images/excel.svg" alt="excel_icon">       
+          </button>
+          <section id="contenedor2"></section>
+        </div>
+        <hr class="mt-3" />
+        <br />     
       </div>        
     </main>
     <script src="/js/fecha-helper.js"></script>
@@ -84,8 +89,8 @@
 
     <script  defer>    
     
-    let dateApprovedCheckbox = document.getElementById('date_approved')
     let dateMoneyCheckbox = document.getElementById('date_money')
+    let dateApprovedCheckbox = document.getElementById('date_approved')
       
       let dataReducida = '<%- data %>';       
       let dataReducidaParse = JSON.parse(dataReducida)     
@@ -119,14 +124,14 @@
       dateMoneyCheckbox.addEventListener('change', ()=>{
         if(dateMoneyCheckbox.checked){
          dateApprovedCheckbox.checked = true
-          dateApprovedCheckbox.disabled = true
-          spanBegin.innerHTML = "liberación"
-          spanEnd.innerHTML = "liberación"
+         dateApprovedCheckbox.disabled = false
+          spanBegin.innerHTML = "creación"
+          spanEnd.innerHTML = "creación"
         }
         if(!dateMoneyCheckbox.checked){          
-          dateApprovedCheckbox.disabled = false
-          spanBegin.innerHTML = "creación"          
-          spanEnd.innerHTML = "creación"
+          dateApprovedCheckbox.disabled = true
+          spanBegin.innerHTML = "liberación"          
+          spanEnd.innerHTML = "liberación"
         }
       })    
       

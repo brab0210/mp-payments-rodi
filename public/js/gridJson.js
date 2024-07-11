@@ -12,7 +12,7 @@ let grid = new gridjs.Grid({
   },
   language: {
     search: {
-      placeholder: '🔍 Búsqueda por palabra...',
+      placeholder: '🔍 Búsqueda...',
     },
   },
   style: {
