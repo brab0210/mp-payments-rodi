@@ -23,7 +23,7 @@ function getFecha() {
     filterOrder = 'false';
   }
 
-  const url = `/mp/search-narrow?begin_date=${begin_date}&end_date=${end_date}&orderDateCreated=${filter}&orderOnlyApproved=${filterOrder}`;
+  const url = `/mp/search-narrow?begin_date=${begin_date}&end_date=${end_date}&orderDateMoney=${filter}&orderOnlyApproved=${filterOrder}`;
   window.location.href = url;
   return false;
 }
@@ -50,7 +50,7 @@ function getFechaOld() {
     filterOrder = 'false';
   }
 
-  const url = `/mp/old-narrow?begin_date=${begin_date}&end_date=${end_date}&orderDateCreated=${filter}&orderOnlyApproved=${filterOrder}`;
+  const url = `/mp/old-narrow?begin_date=${begin_date}&end_date=${end_date}&orderDateMoney=${filter}&orderOnlyApproved=${filterOrder}`;
   window.location.href = url;
   return false;
 }
