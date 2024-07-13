@@ -63,9 +63,9 @@ function getExcelExtracto() {
   let filterOrder;
 
   if (orderDateCreated.checked) {
-    filter = 'false';
-  } else {
     filter = 'true';
+  } else {
+    filter = 'false';
   }
 
   if (orderApproved.checked) {

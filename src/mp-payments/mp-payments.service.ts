@@ -106,17 +106,18 @@ export class MpPaymentsService {
   }
 
   async excelExtracto(data) {
-    // fecha description importe saldo
     const resultsSheet = [];
     data.resultados.forEach((result) => {
       const baseData = {
         Fecha:
-          result.date_approved == null
-            ? ''
-            : result.date_approved.split(' ')[0],
-        Description: `${result.description} | ${result.cuit.identification?.number}`,
+          result.date_created == null ? '' : result.date_created.split(' ')[0],
+        Description: `${result.id} | ${result.description} | ${result.cuit ? result.cuit.identification?.number : ''}`,
         Importe: result.net_received_amount,
-        Saldo: 0,
+
+        /*   Importe: parseFloat(
+          result.net_received_amount.toString().replace('.', ','),
+        ), */
+        Saldo: '',
       };
       resultsSheet.push(baseData);
     });

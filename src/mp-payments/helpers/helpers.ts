@@ -70,13 +70,12 @@ export const miniNarrowResults = async function (response): Promise<Object> {
         payer == null || payer == undefined ? '' : payer.identification?.number,
       description: description == null ? operation_type : description,
       fee_details: payer == null ? 0 : fee_details[0]?.amount,
-      transaction_details,
       charges_details_total: parseFloat(total.toFixed(2)),
       charges_details: newChargesDetails,
       net_received_amount:
         payer == null
           ? -parseFloat(add_unit_price.toFixed(2))
-          : parseFloat(net_received_amount.toFixed(2)),
+          : parseFloat(net_received_amount).toFixed(2),
       total_paid_amount:
         payer == null
           ? -parseFloat(total_paid_amount.toFixed(2))
