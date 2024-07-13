@@ -12,7 +12,7 @@ export class QueryParamsDto {
 
   @IsOptional()
   @IsString()
-  orderDateMoney?: string;
+  orderDateCreated?: string;
 
   @IsOptional()
   @IsString()

@@ -35,7 +35,12 @@ export class MpPaymentsController {
       title: 'Main Page',
       data: JSON.stringify(data).replace("'", ''),
       data2: JSON.stringify(data2).replace("'", ''),
-      queryParams: { begin_date, end_date, order_only_approved: 'true' },
+      queryParams: {
+        begin_date,
+        end_date,
+        orderOnlyApproved: 'true',
+        orderDateCreated: 'false',
+      },
     };
   }
 
@@ -53,8 +58,8 @@ export class MpPaymentsController {
     const data2 = await this.mpPaymentsService.aperturaDeImpuestos(queryParams);
     let begin_date = queryParams.begin_date.split('T')[0];
     let end_date = queryParams.end_date.split('T')[0];
-    let date_money_release = queryParams.orderDateMoney;
-    let order_only_approved = queryParams.orderOnlyApproved;
+    let orderDateCreated = queryParams.orderDateCreated;
+    let orderOnlyApproved = queryParams.orderOnlyApproved;
 
     return {
       title: 'Main Page',
@@ -63,8 +68,8 @@ export class MpPaymentsController {
       queryParams: {
         begin_date,
         end_date,
-        date_money_release,
-        order_only_approved,
+        orderOnlyApproved,
+        orderDateCreated,
       },
     };
   }
@@ -78,7 +83,12 @@ export class MpPaymentsController {
     const data3 = await this.mpPaymentsService.findAll(queryParams);
     let begin_date = queryParams.begin_date.split('T')[0];
     let end_date = queryParams.end_date.split('T')[0];
-    queryParams = { begin_date, end_date, orderOnlyApproved: 'true' };
+    queryParams = {
+      begin_date,
+      end_date,
+      orderOnlyApproved: 'true',
+      orderDateCreated: 'false',
+    };
     res.send(html_narrow(data, data2, data3, queryParams));
   }
 
@@ -95,8 +105,13 @@ export class MpPaymentsController {
     let begin_date = queryParams.begin_date.split('T')[0];
     let end_date = queryParams.end_date.split('T')[0];
     let orderOnlyApproved = queryParams.orderOnlyApproved;
-    let orderDateMoney = queryParams.orderDateMoney;
-    queryParams = { begin_date, end_date, orderOnlyApproved, orderDateMoney };
+    let orderDateCreated = queryParams.orderDateCreated;
+    queryParams = {
+      begin_date,
+      end_date,
+      orderOnlyApproved,
+      orderDateCreated,
+    };
 
     //date_approved sin null
     if (orderOnlyApproved == 'true') {

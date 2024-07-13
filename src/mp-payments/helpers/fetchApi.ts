@@ -20,7 +20,7 @@ export class FetchApi {
   );
   async findAll(queryParams: QueryParamsDto) {
     try {
-      const { begin_date, end_date, orderDateMoney = 'false' } = queryParams;
+      const { begin_date, end_date, orderDateCreated = 'false' } = queryParams;
       const response = await firstValueFrom(
         this.httpService.get(`${this.url}search`, {
           method: 'GET',
@@ -29,10 +29,14 @@ export class FetchApi {
           },
           params: {
             sort:
-              orderDateMoney == 'false' ? 'money_release_date' : 'date_created',
+              orderDateCreated == 'false'
+                ? 'money_release_date'
+                : 'date_created',
             criteria: 'desc',
             range:
-              orderDateMoney == 'false' ? 'money_release_date' : 'date_created',
+              orderDateCreated == 'false'
+                ? 'money_release_date'
+                : 'date_created',
             begin_date,
             end_date,
             limit: 1000,

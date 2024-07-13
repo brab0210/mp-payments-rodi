@@ -72,7 +72,6 @@ let grid = new gridjs.Grid({
     },
     'Fee Amount',
     'Total Charges',
-    'Additional Info',
     'Net Received Amount',
     'Total Paid Amount',
   ],
@@ -87,8 +86,7 @@ let grid = new gridjs.Grid({
       item.cuit,
       item.description,
       item.fee_details,
-      item.charges_details_total,
-      item.additional_info,
+      parseFloat(item.charges_details_total).toFixed(2),
       item.net_received_amount,
       item.total_paid_amount,
     ]);
@@ -111,8 +109,7 @@ function testFilter(data) {
           item.cuit,
           item.description,
           item.fee_details,
-          item.charges_details_total,
-          item.additional_info,
+          parseFloat(item.charges_details_total).toFixed(2),
           item.net_received_amount,
           item.total_paid_amount,
         ]);

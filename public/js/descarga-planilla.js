@@ -1,7 +1,7 @@
 function getExcelApertura() {
   let date_ini = document.getElementById('date_ini');
   let date_fin = document.getElementById('date_fin');
-  let filterDate = document.getElementById('date_money');
+  let orderDateCreated = document.getElementById('date_created');
   let orderApproved = document.getElementById('date_approved');
 
   let begin_date = calcFecha(date_ini);
@@ -9,7 +9,7 @@ function getExcelApertura() {
   let filter;
   let filterOrder;
 
-  if (filterDate.checked) {
+  if (orderDateCreated.checked) {
     filter = 'true';
   } else {
     filter = 'false';
@@ -20,14 +20,14 @@ function getExcelApertura() {
   } else {
     filterOrder = 'false';
   }
-  const url = `/mp/download?begin_date=${begin_date}&end_date=${end_date}&orderDateMoney=${filter}&orderOnlyApproved=${filterOrder}`;
+  const url = `/mp/download?begin_date=${begin_date}&end_date=${end_date}&orderDateCreated=${filter}&orderOnlyApproved=${filterOrder}`;
   window.location.href = url;
   return false;
 }
 function getExcelReducida() {
   let date_ini = document.getElementById('date_ini');
   let date_fin = document.getElementById('date_fin');
-  let filterDate = document.getElementById('date_money');
+  let orderDateCreated = document.getElementById('date_created');
   let orderApproved = document.getElementById('date_approved');
 
   let begin_date = calcFecha(date_ini);
@@ -35,7 +35,7 @@ function getExcelReducida() {
   let filter;
   let filterOrder;
 
-  if (filterDate.checked) {
+  if (orderDateCreated.checked) {
     filter = 'true';
   } else {
     filter = 'false';
@@ -46,7 +46,7 @@ function getExcelReducida() {
   } else {
     filterOrder = 'false';
   }
-  const url = `/mp/downloadredu?begin_date=${begin_date}&end_date=${end_date}&orderDateMoney=${filter}&orderOnlyApproved=${filterOrder}`;
+  const url = `/mp/downloadredu?begin_date=${begin_date}&end_date=${end_date}&orderDateCreated=${filter}&orderOnlyApproved=${filterOrder}`;
   window.location.href = url;
   return false;
 }
@@ -54,7 +54,7 @@ function getExcelReducida() {
 function getExcelExtracto() {
   let date_ini = document.getElementById('date_ini');
   let date_fin = document.getElementById('date_fin');
-  let filterDate = document.getElementById('date_money');
+  let orderDateCreated = document.getElementById('date_created');
   let orderApproved = document.getElementById('date_approved');
 
   let begin_date = calcFecha(date_ini);
@@ -62,7 +62,7 @@ function getExcelExtracto() {
   let filter;
   let filterOrder;
 
-  if (filterDate.checked) {
+  if (orderDateCreated.checked) {
     filter = 'false';
   } else {
     filter = 'true';
@@ -73,7 +73,7 @@ function getExcelExtracto() {
   } else {
     filterOrder = 'false';
   }
-  const url = `/mp/downloadextracto?begin_date=${begin_date}&end_date=${end_date}&orderDateMoney=${filter}&orderOnlyApproved=${filterOrder}`;
+  const url = `/mp/downloadextracto?begin_date=${begin_date}&end_date=${end_date}&orderDateCreated=${filter}&orderOnlyApproved=${filterOrder}`;
   window.location.href = url;
   return false;
 }

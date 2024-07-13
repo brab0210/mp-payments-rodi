@@ -114,7 +114,7 @@ export class MpPaymentsService {
           result.date_approved == null
             ? ''
             : result.date_approved.split(' ')[0],
-        Description: result.description,
+        Description: `${result.description} | ${result.cuit.identification?.number}`,
         Importe: result.net_received_amount,
         Saldo: 0,
       };
@@ -130,7 +130,7 @@ export class MpPaymentsService {
   async leyendaExcel(queryParams) {
     let begin_date = queryParams.begin_date.split('T')[0];
     let end_date = queryParams.end_date.split('T')[0];
-    let leyendaExcel = `${begin_date} al ${end_date}-orderDateMoney_${queryParams.orderDateMoney}-orderOnlyApproved_${queryParams.orderOnlyApproved}`;
+    let leyendaExcel = `${begin_date} al ${end_date}-orderDateCreated_${queryParams.orderDateCreated}-orderOnlyApproved_${queryParams.orderOnlyApproved}`;
 
     return leyendaExcel;
   }

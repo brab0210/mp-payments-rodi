@@ -1,7 +1,7 @@
 function getFecha() {
   let date_ini = document.getElementById('date_ini');
   let date_fin = document.getElementById('date_fin');
-  let filterDate = document.getElementById('date_money');
+  let orderDateCreated = document.getElementById('date_created');
   let orderApproved = document.getElementById('date_approved');
 
   if (!date_ini.value || !date_fin.value)
@@ -11,7 +11,7 @@ function getFecha() {
   let filter;
   let filterOrder;
 
-  if (filterDate.checked) {
+  if (orderDateCreated.checked) {
     filter = 'true';
   } else {
     filter = 'false';
@@ -23,13 +23,13 @@ function getFecha() {
     filterOrder = 'false';
   }
 
-  const url = `/mp/search-narrow?begin_date=${begin_date}&end_date=${end_date}&orderDateMoney=${filter}&orderOnlyApproved=${filterOrder}`;
+  const url = `/mp/search-narrow?begin_date=${begin_date}&end_date=${end_date}&orderDateCreated=${filter}&orderOnlyApproved=${filterOrder}`;
   window.location.href = url;
   return false;
 }
 
 function getFechaOld() {
-  let filterDate = document.getElementById('date_money');
+  let orderDateCreated = document.getElementById('date_created');
   let orderApproved = document.getElementById('date_approved');
   if (!date_ini.value || !date_fin.value)
     return alert('Debe elegir ambas fechas!');
@@ -38,7 +38,7 @@ function getFechaOld() {
   let filter;
   let filterOrder;
 
-  if (filterDate.checked) {
+  if (orderDateCreated.checked) {
     filter = 'true';
   } else {
     filter = 'false';
@@ -50,7 +50,7 @@ function getFechaOld() {
     filterOrder = 'false';
   }
 
-  const url = `/mp/old-narrow?begin_date=${begin_date}&end_date=${end_date}&orderDateMoney=${filter}&orderOnlyApproved=${filterOrder}`;
+  const url = `/mp/old-narrow?begin_date=${begin_date}&end_date=${end_date}&orderDateCreated=${filter}&orderOnlyApproved=${filterOrder}`;
   window.location.href = url;
   return false;
 }

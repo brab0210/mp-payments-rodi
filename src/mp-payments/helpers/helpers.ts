@@ -26,8 +26,8 @@ export const miniNarrowResults = async function (response): Promise<Object> {
           account_type: charge.accounts.from,
           amount:
             charge.type == 'coupon'
-              ? parseFloat(charge.amounts.original.toFixed(2))
-              : `-${parseFloat(charge.amounts.original.toFixed(2))}`,
+              ? parseFloat(charge.amounts.original).toFixed(2)
+              : `-${parseFloat(charge.amounts.original).toFixed(2)}`,
           type: charge.type,
         });
         total = total + parseFloat(charge.amounts.original.toFixed(2));
@@ -37,8 +37,8 @@ export const miniNarrowResults = async function (response): Promise<Object> {
           account_type: charge.accounts.from,
           amount:
             charge.type == 'coupon'
-              ? parseFloat(charge.amounts.original.toFixed(2))
-              : `-${parseFloat(charge.amounts.original.toFixed(2))}`,
+              ? parseFloat(charge.amounts.original).toFixed(2)
+              : `-${parseFloat(charge.amounts.original).toFixed(2)}`,
           type: charge.type,
         });
         total = total + parseFloat(charge.amounts.original.toFixed(2));
@@ -49,7 +49,6 @@ export const miniNarrowResults = async function (response): Promise<Object> {
 
     //additional_info => items sumar unit_price
     let add_unit_price = 0;
-    let net_rec_amount = 0;
 
     if (payer == null) {
       if (additional_info.items && additional_info.items[0].unit_price) {
@@ -72,13 +71,8 @@ export const miniNarrowResults = async function (response): Promise<Object> {
       description: description == null ? operation_type : description,
       fee_details: payer == null ? 0 : fee_details[0]?.amount,
       transaction_details,
-      charges_details_total: total,
+      charges_details_total: parseFloat(total.toFixed(2)),
       charges_details: newChargesDetails,
-      additional_info:
-        payer == null
-          ? -parseFloat(add_unit_price.toFixed(2))
-          : parseFloat(add_unit_price.toFixed(2)),
-
       net_received_amount:
         payer == null
           ? -parseFloat(add_unit_price.toFixed(2))
@@ -106,12 +100,12 @@ export const funcAperturaImpuestos = async (res) => {
       date_approved,
       date_created,
       description,
+      payer,
       money_release_date,
       charges_details,
       charges_details_total,
       net_received_amount,
       total_paid_amount,
-      additional_info,
     } = res.results[index];
     arr.push({
       id,
@@ -119,7 +113,7 @@ export const funcAperturaImpuestos = async (res) => {
       date_approved,
       money_release_date,
       description,
-      additional_info,
+      payer,
       net_received_amount,
       total_paid_amount,
     });
@@ -229,22 +223,32 @@ export const html_narrow = (data, data2, data3, queryParams) => `
 </nav>
 </header>
 
+<div class="container-fluid mb-2">
+      <div class="row ms-2">
+        <div class="col-12">
+          <p class="text-muted">
+            11/07/2024: no se incluyen las transferencias realizadas a cuentas que no son de mercado pago, ni tampoco los rendimientos pagados por el dinero en cuenta.
+          </p>
+        </div>
+      </div>
+    </div>
+
 <main class="container-fluid">
   <div class="row ms-2">
-          <div class="col-2">
+          <div class="col-md-3 col-lg-2">
           
-            <h4 class="text-muted text-center">Fecha Inicial</h4>
+            <h4 class="text-muted ms-1 h4-style" >Fecha inicial por <span class="text-muted h4-style" id="span_date_begin">liberación</span></h4>
             <div class="input-group">
-              <input type="date" class="form-control" id="date_ini" name="begin_date" value='${queryParams.begin_date}'/>
+              <input  type="date" class="form-control" id="date_ini" name="begin_date" value="${queryParams ? queryParams.begin_date : ''}"/>
               <div  iv class="input-group-addon">
                 <span class="glyphicon glyphicon-th"></span>
               </div>
            </div>
           </div>
-          <div class="col-2">
-            <h4 class="text-muted text-center">Fecha Final</h4>
+          <div class="col-md-3 col-lg-2">
+            <h4 class="text-muted ms-1 h4-style" id="title_end">Fecha final por <span class="text-muted h4-style" id="span_date_end">liberación</span></h4>
               <div class="input-group">
-                <input type="date" class="form-control" id="date_fin" name="end_date" value='${queryParams.end_date}'/>
+                <input  type="date" class="form-control" id="date_fin" name="end_date" value="${queryParams ? queryParams.end_date : ''}"/>
                 <div class="input-group-addon">
                 <span class="glyphicon glyphicon-th"></span>
                 </div>
@@ -252,24 +256,23 @@ export const html_narrow = (data, data2, data3, queryParams) => `
           </div>
         </div>
          
-
         <div class="row mt-2">
-          <div class="col-2 text-center wrap-btn" style="margin-left: 0.45rem;">            
-            <button class="mt-2 btn" onclick="getFechaOld()" >Buscar</button>            
+          <div class="col-md-2 col-lg-2 wrap-btn">            
+            <button class="mt-2 col-sm-3 col-md-8 col-lg-8 btn" onclick="getFechaOld()" style="margin-left: 1.25rem;">Buscar</button>                        
           </div>
-            <div class="col-4 mt-1 ms-1" style="margin-left: 0.75rem; font-size: 14px;">  
-           <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="date_approved"  ${queryParams.orderOnlyApproved == 'true' ? 'checked' : ''}  ${queryParams.orderDateMoney == 'true' ? 'disabled' : ''}>
+          
+          <div class="col-md-4 col-lg-4 mt-1" style="margin-left: 1.15rem; font-size: 13px;">  
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="date_approved" ${queryParams.orderOnlyApproved == 'true' ? 'checked' : ''}>
               <label for="date_approved">Solo operaciones aprobadas</label>                
             </div>          
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="date_money" ${queryParams.orderDateMoney == 'true' ? 'checked' : ''}>
-              <label id="label_date_money" for="date_money">${queryParams.orderDateMoney == 'true' ? 'Por fecha de creación' : 'Por fecha de dinero liberado'}</label>             
-
+              <input class="form-check-input" type="checkbox" id="date_created" ${queryParams.orderDateCreated == 'true' ? 'checked' : ''}>              
+              <label id="label_date_created" for="date_created">Por fecha de creación</label>
             </div>
           </div>
-        </div>
-      </div>
+        </div>    
+      
 
       <div class="mt-4 ms-2">
 <h3 class="mt-3 mb-1 ms-1">Tabla Reducida</h3>
@@ -307,19 +310,36 @@ jsonGrid3.render();
 
 
  let dateApprovedCheckbox = document.getElementById('date_approved')
- let dateMoneyCheckbox = document.getElementById('date_money')
+ let dateCreatedCheckbox = document.getElementById('date_created')
+
+ let spanBegin = document.getElementById('span_date_begin')
+ let spanEnd = document.getElementById('span_date_end')
+
+  dateApprovedCheckbox.disabled = true
+
+    if(dateApprovedCheckbox.checked){
+      dateApprovedCheckbox.disabled = false
+        spanBegin.innerHTML = "creación"
+          spanEnd.innerHTML = "creación"    }
+
+    if(!dateCreatedCheckbox.checked){
+          spanBegin.innerHTML = "liberación"          
+          spanEnd.innerHTML = "liberación"
+    }
   
-      dateMoneyCheckbox.addEventListener('change', ()=>{
-        if(dateMoneyCheckbox.checked){
+      dateCreatedCheckbox.addEventListener('change', ()=>{
+        if(dateCreatedCheckbox.checked){
          dateApprovedCheckbox.checked = true
-          dateApprovedCheckbox.disabled = true
-          document.getElementById('label_date_money').innerHTML = "Por fecha de creación"
+         dateApprovedCheckbox.disabled = false
+          spanBegin.innerHTML = "creación"
+          spanEnd.innerHTML = "creación"
 
         }
-        if(!dateMoneyCheckbox.checked){          
-          dateApprovedCheckbox.disabled = false
-          
-          document.getElementById('label_date_money').innerHTML = "Por fecha de dinero liberado"
+        if(!dateCreatedCheckbox.checked){          
+         dateApprovedCheckbox.disabled = true
+          dateApprovedCheckbox.checked = true
+          spanBegin.innerHTML = "liberación"          
+          spanEnd.innerHTML = "liberación"
         }
       })
        function goHome() {
