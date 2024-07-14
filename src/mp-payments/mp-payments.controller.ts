@@ -1,8 +1,10 @@
 import {
+  Body,
   Controller,
   Get,
   Param,
   ParseIntPipe,
+  Post,
   Query,
   Render,
   Res,
@@ -159,6 +161,11 @@ export class MpPaymentsController {
     let leyendaExcel = await this.mpPaymentsService.leyendaExcel(queryParams);
 
     res.download(filepath, `${leyendaExcel}-Tabla_Extracto.xlsx`);
+  }
+
+  @Post('/downloadextracto')
+  async testExtracto(@Body() body: any) {
+    console.log({ body: body[0] });
   }
 
   @Get('/*')

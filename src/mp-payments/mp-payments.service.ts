@@ -135,4 +135,8 @@ export class MpPaymentsService {
 
     return leyendaExcel;
   }
+
+  async filtrosExtractoBancarios(data, queryParams) {
+    //console.log({ body: data });
+  }
 }

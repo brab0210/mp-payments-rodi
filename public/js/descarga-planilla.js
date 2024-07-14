@@ -51,7 +51,7 @@ function getExcelReducida() {
   return false;
 }
 
-function getExcelExtracto() {
+/* function getExcelExtracto() {
   let date_ini = document.getElementById('date_ini');
   let date_fin = document.getElementById('date_fin');
   let orderDateCreated = document.getElementById('date_created');
@@ -76,6 +76,27 @@ function getExcelExtracto() {
   const url = `/mp/downloadextracto?begin_date=${begin_date}&end_date=${end_date}&orderDateCreated=${filter}&orderOnlyApproved=${filterOrder}`;
   window.location.href = url;
   return false;
+} */
+
+function getExcelExtracto() {
+  //dataGridJsonFiltradaApertura
+  //  dataGridJsonApertura
+  let data;
+  if (dateApprovedCheckbox.checked) {
+    data = dataGridJsonFiltradaApertura;
+  } else {
+    data = dataGridJsonApertura;
+  }
+
+  console.log({ testURL: window.location.href });
+
+  /*  fetch('http://localhost:3000/mp/downloadextracto', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  }); */
 }
 
 function calcFecha(date, txt = '') {
