@@ -51,34 +51,7 @@ function getExcelReducida() {
   return false;
 }
 
-/* function getExcelExtracto() {
-  let date_ini = document.getElementById('date_ini');
-  let date_fin = document.getElementById('date_fin');
-  let orderDateCreated = document.getElementById('date_created');
-  let orderApproved = document.getElementById('date_approved');
-
-  let begin_date = calcFecha(date_ini);
-  let end_date = calcFecha(date_fin, 'final');
-  let filter;
-  let filterOrder;
-
-  if (orderDateCreated.checked) {
-    filter = 'true';
-  } else {
-    filter = 'false';
-  }
-
-  if (orderApproved.checked) {
-    filterOrder = 'true';
-  } else {
-    filterOrder = 'false';
-  }
-  const url = `/mp/downloadextracto?begin_date=${begin_date}&end_date=${end_date}&orderDateCreated=${filter}&orderOnlyApproved=${filterOrder}`;
-  window.location.href = url;
-  return false;
-} */
-
-function getExcelExtracto() {
+async function getExcelExtracto() {
   //dataGridJsonFiltradaApertura
   //  dataGridJsonApertura
   let data;
@@ -87,16 +60,38 @@ function getExcelExtracto() {
   } else {
     data = dataGridJsonApertura;
   }
+  let testBody = { data, params };
+  try {
+    const response = await fetch(
+      `${window.location.origin}/mp/downloadextracto`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(testBody),
+      },
+    );
 
-  console.log({ testURL: window.location.href });
+    if (response.ok) {
+      const disposition = response.headers.get('Content-Disposition');
+      const fileName = disposition.split('filename=')[1].replace(/['"]/g, '');
 
-  /*  fetch('http://localhost:3000/mp/downloadextracto', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  }); */
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } else {
+      console.error('Error al generar el archivo');
+    }
+  } catch (error) {
+    console.error('Error en la solicitud de generación del archivo:', error);
+  }
 }
 
 function calcFecha(date, txt = '') {

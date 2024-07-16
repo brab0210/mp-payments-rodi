@@ -105,18 +105,22 @@ export class MpPaymentsService {
     //return result;
   }
 
-  async excelExtracto(data) {
+  async excelExtracto(data, orderDateCreated) {
     const resultsSheet = [];
-    data.resultados.forEach((result) => {
-      const baseData = {
-        Fecha:
-          result.date_created == null ? '' : result.date_created.split(' ')[0],
-        Description: `${result.id} | ${result.description} | ${result.cuit ? result.cuit.identification?.number : ''}`,
-        Importe: result.net_received_amount,
+    data.forEach((result) => {
+      let fecha;
+      if (orderDateCreated == 'true') {
+        fecha = result.date_created;
+      }
+      if ((orderDateCreated = 'false')) {
+        fecha = result.money_release_date;
+      }
 
-        /*   Importe: parseFloat(
-          result.net_received_amount.toString().replace('.', ','),
-        ), */
+      const baseData = {
+        Fecha: fecha == null ? '' : fecha.split(' ')[0],
+        Description: `${result.id} | ${result.description} | ${result.payer ? result.payer.identification?.number : ''}`,
+        Importe: +result.net_received_amount,
+
         Saldo: '',
       };
       resultsSheet.push(baseData);
@@ -131,6 +135,7 @@ export class MpPaymentsService {
   async leyendaExcel(queryParams) {
     let begin_date = queryParams.begin_date.split('T')[0];
     let end_date = queryParams.end_date.split('T')[0];
+
     let leyendaExcel = `${begin_date} al ${end_date}-orderDateCreated_${queryParams.orderDateCreated}-orderOnlyApproved_${queryParams.orderOnlyApproved}`;
 
     return leyendaExcel;

@@ -106,7 +106,12 @@
     
     let dateCreatedCheckbox = document.getElementById('date_created')
     let dateApprovedCheckbox = document.getElementById('date_approved')
-
+    let params = {
+      begin_date: '<%= queryParams.begin_date %>',
+      end_date: '<%= queryParams.end_date %>',
+      orderOnlyApproved: '<%= queryParams.orderOnlyApproved %>',      
+      orderDateCreated:'<%= queryParams.orderDateCreated %>',
+    }    
     let spanBegin = document.getElementById('span_date_begin')
     let spanEnd = document.getElementById('span_date_end')
 
@@ -127,12 +132,12 @@
       let dataReducida = '<%- data %>';       
       let dataReducidaParse = JSON.parse(dataReducida)     
      let dataGridJsonFiltrada= dataReducidaParse.results.filter(e=>e.date_approved != null)         
-     let dataGridJson = dataReducidaParse.results.map(e=>e)   
+     let dataGridJson = dataReducidaParse.results.map(e=>e)      
      
       
      let dataApertura = '<%- data2 %>';     
       let dataAperturaParse = JSON.parse(dataApertura)          
-      let dataGridJsonFiltradaApertura= dataAperturaParse.resultados.filter(e=>e.date_approved != null)         
+      let dataGridJsonFiltradaApertura= dataAperturaParse.resultados.filter(e=>e.date_approved != null)
       let dataGridJsonApertura = dataAperturaParse.resultados.map(e=>e)   
     
       dateApprovedCheckbox.addEventListener('change',()=>{

@@ -152,7 +152,7 @@ export class MpPaymentsController {
     res.download(filepath, `${leyendaExcel}-Tabla_Reducida.xlsx`);
   }
 
-  @Get('/downloadextracto')
+  /* @Get('/downloadextracto')
   async excelExtracto(@Query() queryParams, @Res() res: Response) {
     let data = await this.mpPaymentsService.aperturaDeImpuestos(queryParams);
     let datos = await this.mpPaymentsService.excelExtracto(data);
@@ -161,11 +161,38 @@ export class MpPaymentsController {
     let leyendaExcel = await this.mpPaymentsService.leyendaExcel(queryParams);
 
     res.download(filepath, `${leyendaExcel}-Tabla_Extracto.xlsx`);
-  }
+  } */
 
   @Post('/downloadextracto')
-  async testExtracto(@Body() body: any) {
-    console.log({ body: body[0] });
+  async testExtracto(@Body() body: any, @Res() res: Response) {
+    let { data, params } = body;
+    let datos;
+    if (params.orderDateCreated == 'true') {
+      let orderDateCreated = 'true';
+      datos = await this.mpPaymentsService.excelExtracto(
+        data,
+        orderDateCreated,
+      );
+    } else {
+      let orderDateCreated = 'false';
+      datos = await this.mpPaymentsService.excelExtracto(
+        data,
+        orderDateCreated,
+      );
+    }
+    const filepath = join(__dirname, '..', '..', 'resultadoExtracto.xlsx');
+    let leyendaExcel = await this.mpPaymentsService.leyendaExcel(params);
+    let fileName = `${leyendaExcel}-Tabla_Extracto.xlsx`;
+
+    res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
+    res.download(filepath, fileName, (err) => {
+      if (err) {
+        console.error('Error al enviar el archivo');
+        res.status(500).send('error al descargar archivo');
+      } else {
+        console.log('archivo enviado correctamente');
+      }
+    });
   }
 
   @Get('/*')

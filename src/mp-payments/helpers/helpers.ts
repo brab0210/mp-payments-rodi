@@ -9,12 +9,15 @@ export const miniNarrowResults = async function (response): Promise<Object> {
       date_approved,
       date_created,
       payment_type_id,
+      date_last_updated,
       payer,
       fee_details,
       transaction_details,
       description,
       charges_details,
       operation_type,
+
+      transaction_amount_refunded,
       money_release_date,
       additional_info,
     } = res;
@@ -26,22 +29,22 @@ export const miniNarrowResults = async function (response): Promise<Object> {
           account_type: charge.accounts.from,
           amount:
             charge.type == 'coupon'
-              ? parseFloat(charge.amounts.original).toFixed(2)
-              : `-${parseFloat(charge.amounts.original).toFixed(2)}`,
+              ? charge.amounts.original.toFixed(2)
+              : -charge.amounts.original.toFixed(2),
           type: charge.type,
         });
-        total = total + parseFloat(charge.amounts.original.toFixed(2));
+        total = total + charge.amounts.original.toFixed(2);
       } else if (payer && charge.accounts.from == 'collector') {
         newChargesDetails.push({
           name: charge.name,
           account_type: charge.accounts.from,
           amount:
             charge.type == 'coupon'
-              ? parseFloat(charge.amounts.original).toFixed(2)
-              : `-${parseFloat(charge.amounts.original).toFixed(2)}`,
+              ? charge.amounts.original.toFixed(2)
+              : -charge.amounts.original.toFixed(2),
           type: charge.type,
         });
-        total = total + parseFloat(charge.amounts.original.toFixed(2));
+        total = total + charge.amounts.original.toFixed(2);
       }
     });
 
@@ -53,7 +56,7 @@ export const miniNarrowResults = async function (response): Promise<Object> {
     if (payer == null) {
       if (additional_info.items && additional_info.items[0].unit_price) {
         additional_info.items.map(({ unit_price }) => {
-          add_unit_price += parseFloat(unit_price);
+          add_unit_price += unit_price;
         });
       }
     }
@@ -66,20 +69,21 @@ export const miniNarrowResults = async function (response): Promise<Object> {
       date_created: date_created != null ? formatoDeFecha(date_created) : null,
       money_release_date:
         money_release_date != null ? formatoDeFecha(money_release_date) : null,
+      date_last_updated:
+        date_last_updated != null ? formatoDeFecha(date_last_updated) : null,
       cuit:
         payer == null || payer == undefined ? '' : payer.identification?.number,
       description: description == null ? operation_type : description,
       fee_details: payer == null ? 0 : fee_details[0]?.amount,
-      charges_details_total: parseFloat(total.toFixed(2)),
+      charges_details_total: total.toFixed(2),
       charges_details: newChargesDetails,
+      transaction_amount_refunded,
       net_received_amount:
-        payer == null
-          ? -parseFloat(add_unit_price.toFixed(2))
-          : parseFloat(net_received_amount).toFixed(2),
+        payer == null ? -add_unit_price : net_received_amount.toFixed(2),
       total_paid_amount:
         payer == null
-          ? -parseFloat(total_paid_amount.toFixed(2))
-          : parseFloat(total_paid_amount.toFixed(2)),
+          ? -total_paid_amount.toFixed(2)
+          : total_paid_amount.toFixed(2),
     });
   });
 
@@ -101,6 +105,7 @@ export const funcAperturaImpuestos = async (res) => {
       description,
       payer,
       money_release_date,
+      date_last_updated,
       charges_details,
       charges_details_total,
       net_received_amount,
@@ -111,6 +116,7 @@ export const funcAperturaImpuestos = async (res) => {
       date_created,
       date_approved,
       money_release_date,
+      date_last_updated,
       description,
       payer,
       net_received_amount,
@@ -127,7 +133,7 @@ export const funcAperturaImpuestos = async (res) => {
             : null,
         money_release_date,
         description: 'IMPUESTO: ' + charge.type + ' | ' + charge.name,
-        net_received_amount: charge.amount,
+        net_received_amount: Number(charge.amount),
         total_paid_amount: '',
       });
     });

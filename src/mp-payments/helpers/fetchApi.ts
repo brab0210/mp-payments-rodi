@@ -43,6 +43,7 @@ export class FetchApi {
           },
         }),
       );
+
       return response.data;
     } catch (error) {
       this.handleErrors(error);
@@ -57,6 +58,7 @@ export class FetchApi {
           Authorization: `Bearer ${this.token}`,
         },
       });
+
       return response.json();
     } catch (error) {
       this.handleErrors(error);
