@@ -82,6 +82,7 @@ let grid = new gridjs.Grid({
   ],
 
   data: () => {
+    //TODO: reformular y hacer en la llamada aprobadas y no aprobadas.
     return dataGridJsonFiltrada.map((item) => [
       item.id,
       item.date_created,

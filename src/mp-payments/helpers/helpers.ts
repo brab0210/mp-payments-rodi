@@ -23,28 +23,30 @@ export const miniNarrowResults = async function (response): Promise<Object> {
     } = res;
     let total = 0;
     charges_details.forEach((charge) => {
+      //si payer es null es un egreso
       if (payer == null && charge.accounts.from == 'payer') {
         newChargesDetails.push({
           name: charge.name,
           account_type: charge.accounts.from,
           amount:
             charge.type == 'coupon'
-              ? charge.amounts.original.toFixed(2)
-              : -charge.amounts.original.toFixed(2),
+              ? charge.amounts.original
+              : -charge.amounts.original,
           type: charge.type,
         });
-        total = total + charge.amounts.original.toFixed(2);
+        total = total + charge.amounts.original;
+        total = total * -1;
       } else if (payer && charge.accounts.from == 'collector') {
         newChargesDetails.push({
           name: charge.name,
           account_type: charge.accounts.from,
           amount:
             charge.type == 'coupon'
-              ? charge.amounts.original.toFixed(2)
-              : -charge.amounts.original.toFixed(2),
+              ? charge.amounts.original
+              : -charge.amounts.original,
           type: charge.type,
         });
-        total = total + charge.amounts.original.toFixed(2);
+        total = total + charge.amounts.original;
       }
     });
 
@@ -75,15 +77,12 @@ export const miniNarrowResults = async function (response): Promise<Object> {
         payer == null || payer == undefined ? '' : payer.identification?.number,
       description: description == null ? operation_type : description,
       fee_details: payer == null ? 0 : fee_details[0]?.amount,
-      charges_details_total: total.toFixed(2),
+      charges_details_total: total,
       charges_details: newChargesDetails,
       transaction_amount_refunded,
       net_received_amount:
-        payer == null ? -add_unit_price : net_received_amount.toFixed(2),
-      total_paid_amount:
-        payer == null
-          ? -total_paid_amount.toFixed(2)
-          : total_paid_amount.toFixed(2),
+        payer == null ? -add_unit_price : net_received_amount,
+      total_paid_amount: payer == null ? -total_paid_amount : total_paid_amount,
     });
   });
 

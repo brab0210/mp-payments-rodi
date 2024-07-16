@@ -115,7 +115,7 @@ export class MpPaymentsService {
       if ((orderDateCreated = 'false')) {
         fecha = result.money_release_date;
       }
-
+      console.log({ Cuit: result?.payer });
       const baseData = {
         Fecha: fecha == null ? '' : fecha.split(' ')[0],
         Description: `${result.id} | ${result.description} | ${result.payer ? result.payer.identification?.number : ''}`,
