@@ -1,77 +1,58 @@
 function getExcelApertura() {
   let date_ini = document.getElementById('date_ini');
   let date_fin = document.getElementById('date_fin');
-  let orderDateCreated = document.getElementById('date_created');
   let orderApproved = document.getElementById('date_approved');
 
   let begin_date = calcFecha(date_ini);
   let end_date = calcFecha(date_fin, 'final');
-  let filter;
-  let filterOrder;
 
-  if (orderDateCreated.checked) {
-    filter = 'true';
-  } else {
-    filter = 'false';
-  }
+  let filterOrder;
 
   if (orderApproved.checked) {
     filterOrder = 'true';
   } else {
     filterOrder = 'false';
   }
-  const url = `/mp/download?begin_date=${begin_date}&end_date=${end_date}&orderDateCreated=${filter}&orderOnlyApproved=${filterOrder}`;
+  const url = `/mp/download?begin_date=${begin_date}&end_date=${end_date}&orderDate=${selectedValue.value}&orderOnlyApproved=${filterOrder}`;
   window.location.href = url;
   return false;
 }
 function getExcelReducida() {
   let date_ini = document.getElementById('date_ini');
   let date_fin = document.getElementById('date_fin');
-  let orderDateCreated = document.getElementById('date_created');
   let orderApproved = document.getElementById('date_approved');
 
   let begin_date = calcFecha(date_ini);
   let end_date = calcFecha(date_fin, 'final');
-  let filter;
-  let filterOrder;
 
-  if (orderDateCreated.checked) {
-    filter = 'true';
-  } else {
-    filter = 'false';
-  }
+  let filterOrder;
 
   if (orderApproved.checked) {
     filterOrder = 'true';
   } else {
     filterOrder = 'false';
   }
-  const url = `/mp/downloadredu?begin_date=${begin_date}&end_date=${end_date}&orderDateCreated=${filter}&orderOnlyApproved=${filterOrder}`;
+  const url = `/mp/downloadredu?begin_date=${begin_date}&end_date=${end_date}&orderDate=${selectedValue.value}&orderOnlyApproved=${filterOrder}`;
   window.location.href = url;
   return false;
 }
 
 async function getExcelExtracto() {
-  //dataGridJsonFiltradaApertura
-  //  dataGridJsonApertura
   let data;
   if (dateApprovedCheckbox.checked) {
-    data = dataGridJsonFiltradaApertura;
+    data = dataReducidaParse.results.filter((e) => e.date_approved != null);
   } else {
-    data = dataGridJsonApertura;
+    data = dataReducidaParse.results.map((e) => e);
   }
   let testBody = { data, params };
   try {
-    const response = await fetch(
-      `${window.location.origin}/mp/downloadextracto`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(testBody),
+    const response = await fetch(`${window.location.origin}/mp/download`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-    );
+      body: JSON.stringify(testBody),
+    });
 
     if (response.ok) {
       const disposition = response.headers.get('Content-Disposition');

@@ -20,7 +20,11 @@ export class FetchApi {
   );
   async findAll(queryParams: QueryParamsDto) {
     try {
-      const { begin_date, end_date, orderDateCreated = 'false' } = queryParams;
+      const {
+        begin_date,
+        end_date,
+        orderDate = 'money_release_date',
+      } = queryParams;
       const response = await firstValueFrom(
         this.httpService.get(`${this.url}search`, {
           method: 'GET',
@@ -28,22 +32,16 @@ export class FetchApi {
             Authorization: `Bearer ${this.tokenBuffer}`,
           },
           params: {
-            sort:
-              orderDateCreated == 'false'
-                ? 'money_release_date'
-                : 'date_created',
+            sort: orderDate,
             criteria: 'desc',
-            range:
-              orderDateCreated == 'false'
-                ? 'money_release_date'
-                : 'date_created',
+            range: orderDate,
             begin_date,
             end_date,
             limit: 1000,
           },
         }),
       );
-
+      //console.log({ response });
       return response.data;
     } catch (error) {
       this.handleErrors(error);

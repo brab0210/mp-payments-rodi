@@ -16,22 +16,20 @@ export const miniNarrowResults = async function (response): Promise<Object> {
       description,
       charges_details,
       operation_type,
-
       transaction_amount_refunded,
       money_release_date,
       additional_info,
     } = res;
     let total = 0;
     charges_details.forEach((charge) => {
-      //si payer es null es un egreso
       if (payer == null && charge.accounts.from == 'payer') {
         newChargesDetails.push({
           name: charge.name,
           account_type: charge.accounts.from,
           amount:
             charge.type == 'coupon'
-              ? charge.amounts.original
-              : -charge.amounts.original,
+              ? +charge.amounts.original
+              : -+charge.amounts.original,
           type: charge.type,
         });
         total = total + charge.amounts.original;
@@ -42,17 +40,17 @@ export const miniNarrowResults = async function (response): Promise<Object> {
           account_type: charge.accounts.from,
           amount:
             charge.type == 'coupon'
-              ? charge.amounts.original
-              : -charge.amounts.original,
+              ? +charge.amounts.original
+              : -+charge.amounts.original,
           type: charge.type,
         });
         total = total + charge.amounts.original;
+        total = total * -1;
       }
     });
 
     let { net_received_amount, total_paid_amount } = transaction_details;
 
-    //additional_info => items sumar unit_price
     let add_unit_price = 0;
 
     if (payer == null) {
@@ -76,13 +74,18 @@ export const miniNarrowResults = async function (response): Promise<Object> {
       cuit:
         payer == null || payer == undefined ? '' : payer.identification?.number,
       description: description == null ? operation_type : description,
-      fee_details: payer == null ? 0 : fee_details[0]?.amount,
+      fee_details:
+        fee_details[0]?.amount == undefined && payer == null
+          ? 0
+          : fee_details[0]?.amount,
+
       charges_details_total: total,
       charges_details: newChargesDetails,
       transaction_amount_refunded,
       net_received_amount:
-        payer == null ? -add_unit_price : net_received_amount,
-      total_paid_amount: payer == null ? -total_paid_amount : total_paid_amount,
+        payer == null ? -add_unit_price : +net_received_amount,
+      total_paid_amount:
+        payer == null ? -+total_paid_amount : +total_paid_amount,
     });
   });
 
@@ -132,7 +135,7 @@ export const funcAperturaImpuestos = async (res) => {
             : null,
         money_release_date,
         description: 'IMPUESTO: ' + charge.type + ' | ' + charge.name,
-        net_received_amount: Number(charge.amount),
+        net_received_amount: +charge.amount,
         total_paid_amount: '',
       });
     });
@@ -271,7 +274,7 @@ export const html_narrow = (data, data2, data3, queryParams) => `
               <label for="date_approved">Solo operaciones aprobadas</label>                
             </div>          
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="date_created" ${queryParams.orderDateCreated == 'true' ? 'checked' : ''}>              
+              <input class="form-check-input" type="checkbox" id="date_created" ${queryParams.orderDate == 'true' ? 'checked' : ''}>              
               <label id="label_date_created" for="date_created">Por fecha de creación</label>
             </div>
           </div>

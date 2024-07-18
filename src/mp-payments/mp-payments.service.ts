@@ -46,33 +46,6 @@ export class MpPaymentsService {
     return { reducida, apertura, original };
   }
 
-  async excelApertura(data) {
-    const resultsSheet = [];
-    data.resultados.forEach((result) => {
-      const baseData = {
-        ID: result.id,
-        'Date Created': result.date_created.split(' ')[0],
-        'Date Approved':
-          result.date_approved == null
-            ? ''
-            : result.date_approved.split(' ')[0],
-        'Money Release Date':
-          result.money_release_date == null
-            ? ''
-            : result.money_release_date.split(' ')[0],
-        Description: result.description,
-        'Net Received Amount': result.net_received_amount,
-        'Total Paid Amount': result.total_paid_amount,
-      };
-      resultsSheet.push(baseData);
-    });
-
-    const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.json_to_sheet(resultsSheet);
-    XLSX.utils.book_append_sheet(wb, ws, 'Apertura por Impuestos');
-    await XLSX.writeFileXLSX(wb, 'resultadoApertura.xlsx');
-    //return result;
-  }
   async excelReducida(data) {
     const resultsSheet = [];
     data.results.forEach((result) => {
@@ -90,10 +63,10 @@ export class MpPaymentsService {
         'Payment Type ID': result.payment_type_id,
         CUIT: result.cuit,
         Description: result.description,
-        'Fee Amount': result.fee_amount,
-        'Total Charges': result.charges_details_total,
-        'Net Received Amount': result.net_received_amount,
-        'Total Paid Amount': result.total_paid_amount,
+        'Fee Amount': +result.fee_amount,
+        'Total Charges': +result.charges_details_total,
+        'Net Received Amount': +result.net_received_amount,
+        'Total Paid Amount': +result.total_paid_amount,
       };
       resultsSheet.push(baseData);
     });
@@ -105,17 +78,17 @@ export class MpPaymentsService {
     //return result;
   }
 
-  async excelExtracto(data, orderDateCreated) {
+  async excelExtracto(data, orderDate) {
     const resultsSheet = [];
     data.forEach((result) => {
       let fecha;
-      if (orderDateCreated == 'true') {
+      if (orderDate == 'true') {
         fecha = result.date_created;
       }
-      if ((orderDateCreated = 'false')) {
+      if ((orderDate = 'false')) {
         fecha = result.money_release_date;
       }
-      console.log({ Cuit: result?.payer });
+
       const baseData = {
         Fecha: fecha == null ? '' : fecha.split(' ')[0],
         Description: `${result.id} | ${result.description} | ${result.payer ? result.payer.identification?.number : ''}`,
@@ -136,7 +109,7 @@ export class MpPaymentsService {
     let begin_date = queryParams.begin_date.split('T')[0];
     let end_date = queryParams.end_date.split('T')[0];
 
-    let leyendaExcel = `${begin_date} al ${end_date}-orderDateCreated_${queryParams.orderDateCreated}-orderOnlyApproved_${queryParams.orderOnlyApproved}`;
+    let leyendaExcel = `${begin_date} al ${end_date}-orderDate_${queryParams.orderDate}-orderOnlyApproved_${queryParams.orderOnlyApproved}`;
 
     return leyendaExcel;
   }

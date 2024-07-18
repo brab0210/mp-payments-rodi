@@ -58,20 +58,21 @@ let gridApertura = new gridjs.Grid({
       name: 'Money Release Date',
       width: '184px',
     },
-    {
-      name: 'Description',
-      /* formatter: (_, row) =>
-        gridjs.html(
-          `<span  data-toggle="tooltip" data-placement="top" title="${row.cells[4].data}">${row.cells[4].data.length > 17 ? row.cells[4].data.substring(0, 17) : row.cells[4].data}...</span>`,
-        ), */
-      width: '180px',
-    },
+    'Description',
     'Net Received Amount',
     'Total Paid Amount',
   ],
 
   data: () => {
-    return dataGridJsonFiltradaApertura.map((item) => [
+    let dataModificada;
+    if (dateApprovedCheckbox.checked) {
+      dataModificada = dataReducidaParse.results.filter(
+        (e) => e.date_approved != null,
+      );
+    } else {
+      dataModificada = dataReducidaParse.results.map((e) => e);
+    }
+    return dataModificada.map((item) => [
       item.id,
       item.date_created,
       item.date_approved,
@@ -82,25 +83,6 @@ let gridApertura = new gridjs.Grid({
     ]);
   },
 });
-//.render(document.getElementById('contenedor2'));
 setTimeout(() => {
   gridApertura.render(document.getElementById('contenedor2'));
 }, 2000);
-
-function testFilterApertura(data) {
-  gridApertura
-    .updateConfig({
-      data: () => {
-        return data.map((item) => [
-          item.id,
-          item.date_created,
-          item.date_approved,
-          item.money_release_date,
-          item.description,
-          item.net_received_amount,
-          item.total_paid_amount,
-        ]);
-      },
-    })
-    .forceRender(document.getElementById('contenedor2'));
-}

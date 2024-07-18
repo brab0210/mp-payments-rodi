@@ -41,7 +41,7 @@ export class MpPaymentsController {
         begin_date,
         end_date,
         orderOnlyApproved: 'true',
-        orderDateCreated: 'false',
+        orderDate: 'money_release_date',
       },
     };
   }
@@ -60,7 +60,7 @@ export class MpPaymentsController {
     const data2 = await this.mpPaymentsService.aperturaDeImpuestos(queryParams);
     let begin_date = queryParams.begin_date.split('T')[0];
     let end_date = queryParams.end_date.split('T')[0];
-    let orderDateCreated = queryParams.orderDateCreated;
+    let orderDate = queryParams.orderDate;
     let orderOnlyApproved = queryParams.orderOnlyApproved;
 
     return {
@@ -71,7 +71,7 @@ export class MpPaymentsController {
         begin_date,
         end_date,
         orderOnlyApproved,
-        orderDateCreated,
+        orderDate,
       },
     };
   }
@@ -89,7 +89,7 @@ export class MpPaymentsController {
       begin_date,
       end_date,
       orderOnlyApproved: 'true',
-      orderDateCreated: 'false',
+      orderDate: 'false',
     };
     res.send(html_narrow(data, data2, data3, queryParams));
   }
@@ -107,12 +107,12 @@ export class MpPaymentsController {
     let begin_date = queryParams.begin_date.split('T')[0];
     let end_date = queryParams.end_date.split('T')[0];
     let orderOnlyApproved = queryParams.orderOnlyApproved;
-    let orderDateCreated = queryParams.orderDateCreated;
+    let orderDate = queryParams.orderDate;
     queryParams = {
       begin_date,
       end_date,
       orderOnlyApproved,
-      orderDateCreated,
+      orderDate,
     };
 
     //date_approved sin null
@@ -128,17 +128,6 @@ export class MpPaymentsController {
     }
 
     return res.send(html_narrow(reducida, apertura, original, queryParams));
-  }
-
-  @Get('/download')
-  async excelDownload(@Query() queryParams, @Res() res: Response) {
-    let data = await this.mpPaymentsService.aperturaDeImpuestos(queryParams);
-    let datos = await this.mpPaymentsService.excelApertura(data);
-    const filepath = join(__dirname, '..', '..', 'resultadoApertura.xlsx');
-
-    let leyendaExcel = await this.mpPaymentsService.leyendaExcel(queryParams);
-
-    res.download(filepath, `${leyendaExcel}-Tabla_Apertura.xlsx`);
   }
 
   @Get('/downloadredu')
@@ -163,22 +152,16 @@ export class MpPaymentsController {
     res.download(filepath, `${leyendaExcel}-Tabla_Extracto.xlsx`);
   } */
 
-  @Post('/downloadextracto')
+  @Post('/download')
   async testExtracto(@Body() body: any, @Res() res: Response) {
     let { data, params } = body;
     let datos;
-    if (params.orderDateCreated == 'true') {
-      let orderDateCreated = 'true';
-      datos = await this.mpPaymentsService.excelExtracto(
-        data,
-        orderDateCreated,
-      );
+    if (params.orderDate == 'true') {
+      let orderDate = 'true';
+      datos = await this.mpPaymentsService.excelExtracto(data, orderDate);
     } else {
-      let orderDateCreated = 'false';
-      datos = await this.mpPaymentsService.excelExtracto(
-        data,
-        orderDateCreated,
-      );
+      let orderDate = 'false';
+      datos = await this.mpPaymentsService.excelExtracto(data, orderDate);
     }
     const filepath = join(__dirname, '..', '..', 'resultadoExtracto.xlsx');
     let leyendaExcel = await this.mpPaymentsService.leyendaExcel(params);

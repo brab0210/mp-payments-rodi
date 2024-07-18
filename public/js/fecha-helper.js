@@ -1,48 +1,37 @@
 function getFecha() {
   let date_ini = document.getElementById('date_ini');
   let date_fin = document.getElementById('date_fin');
-  let orderDateCreated = document.getElementById('date_created');
   let orderApproved = document.getElementById('date_approved');
 
   if (!date_ini.value || !date_fin.value)
     return alert('Debe elegir ambas fechas!');
   let begin_date = calcFecha(date_ini);
   let end_date = calcFecha(date_fin, 'final');
-  let filter;
   let filterOrder;
 
-  if (orderDateCreated.checked) {
-    filter = 'true';
-  } else {
-    filter = 'false';
+  if (selectedValue.value == selectedValue[0].value) {
+    alert('Debes elegir una opción de búsqueda por fecha');
+    return false;
   }
-
   if (orderApproved.checked) {
     filterOrder = 'true';
   } else {
     filterOrder = 'false';
   }
 
-  const url = `/mp/search-narrow?begin_date=${begin_date}&end_date=${end_date}&orderDateCreated=${filter}&orderOnlyApproved=${filterOrder}`;
+  const url = `/mp/search-narrow?begin_date=${begin_date}&end_date=${end_date}&orderDate=${selectedValue.value}&orderOnlyApproved=${filterOrder}`;
   window.location.href = url;
   return false;
 }
 
 function getFechaOld() {
-  let orderDateCreated = document.getElementById('date_created');
   let orderApproved = document.getElementById('date_approved');
   if (!date_ini.value || !date_fin.value)
     return alert('Debe elegir ambas fechas!');
   let begin_date = calcFecha(date_ini);
   let end_date = calcFecha(date_fin, 'final');
-  let filter;
-  let filterOrder;
 
-  if (orderDateCreated.checked) {
-    filter = 'true';
-  } else {
-    filter = 'false';
-  }
+  let filterOrder;
 
   if (orderApproved.checked) {
     filterOrder = 'true';
@@ -50,7 +39,7 @@ function getFechaOld() {
     filterOrder = 'false';
   }
 
-  const url = `/mp/old-narrow?begin_date=${begin_date}&end_date=${end_date}&orderDateCreated=${filter}&orderOnlyApproved=${filterOrder}`;
+  const url = `/mp/old-narrow?begin_date=${begin_date}&end_date=${end_date}&orderDate=${selectedValue.value}&orderOnlyApproved=${filterOrder}`;
   window.location.href = url;
   return false;
 }

@@ -65,15 +65,7 @@ let grid = new gridjs.Grid({
     ,
     'Payment Type Id',
     'CUIT',
-    //'Description',
-    {
-      name: 'Description',
-      /*formatter: (_, row) =>
-        gridjs.html(
-          `<span data-toggle="tooltip" data-placement="top" title="${row.cells[6].data}">${row.cells[6].data.length > 17 ? row.cells[6].data.substring(0, 17) : row.cells[6].data}...</span>`,
-        ), */
-      width: '180px',
-    },
+    'Description',
     'Fee Amount',
     'Total Charges',
     'Transaction Amount Refunded',
@@ -82,8 +74,21 @@ let grid = new gridjs.Grid({
   ],
 
   data: () => {
-    //TODO: reformular y hacer en la llamada aprobadas y no aprobadas.
-    return dataGridJsonFiltrada.map((item) => [
+    let dataModificada;
+    if (dateApprovedCheckbox.checked) {
+      dataModificada = dataReducidaParse.results.filter(
+        (e) => e.date_approved != null,
+      );
+    }
+    if (selectedValue.value == 'date_last_updated') {
+      dataModificada = dataReducidaParse.results.filter(
+        (e) => e.transaction_amount_refunded > 0,
+      );
+    }
+    if (!dateApprovedCheckbox.checked) {
+      dataModificada = dataReducidaParse.results.map((e) => e);
+    }
+    return dataModificada.map((item) => [
       item.id,
       item.date_created,
       item.date_approved,
@@ -103,27 +108,3 @@ let grid = new gridjs.Grid({
 setTimeout(() => {
   grid.render(document.getElementById('contenedor'));
 }, 2000);
-
-function testFilter(data) {
-  grid
-    .updateConfig({
-      data: () => {
-        return data.map((item) => [
-          item.id,
-          item.date_created,
-          item.date_approved,
-          item.money_release_date,
-          item.date_last_updated,
-          item.payment_type_id,
-          item.cuit,
-          item.description,
-          item.fee_details,
-          parseFloat(item.charges_details_total).toFixed(2),
-          item.transaction_amount_refunded,
-          item.net_received_amount,
-          item.total_paid_amount,
-        ]);
-      },
-    })
-    .forceRender(document.getElementById('contenedor'));
-}

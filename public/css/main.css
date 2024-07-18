@@ -77,12 +77,27 @@ header {
   color: #fff !important;
 }
 
+/* .btn_excel {
+  color: #fff;
+  margin: 0.45rem 0 0.45rem 0.25rem;
+  border-radius: 0.25rem;
+  background-color: #188038;
+  cursor: pointer;
+  border: 1px solid transparent;
+  padding: 0.45rem 0.68rem;
+  transition: background-color 0.2s ease-in;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 15px;
+} */
+
 .btn-excel {
   position: absolute;
   color: #fff;
   border-radius: 0.25rem;
   background-color: #188038;
-  cursor: pointer;
+  margin-left: 0.25rem;
   z-index: 999;
   top: 9px;
   left: 275px;
@@ -99,7 +114,6 @@ header {
   position: absolute;
   top: 9px;
   left: 475px;
-  box-shadow: 0px 0px 5px #fff;
 }
 
 .btn-excel:hover {
@@ -109,15 +123,16 @@ header {
 .excel_icon {
   width: 22px;
   height: 22px;
-  /*  position: absolute;
-  top: 7px;
-  left: 2px;*/
   box-shadow: 0px 0px 5px #fff;
 }
 
 .h4-style {
   font-size: 14px;
   font-weight: bold;
+}
+
+.form-select {
+  max-width: 267px !important;
 }
 
 /* Inicio Scroll Bar styles */
@@ -143,3 +158,24 @@ header {
 }
 
 /* Fin Scroll Bar styles */
+
+@media (width < 650px) {
+  .btn-excel {
+    position: relative;
+    padding: 0.35rem 0.28rem;
+    margin: 0.45rem 0 0.45rem 0.25rem;
+    top: 0px;
+    left: 0px;
+    font-size: 12px;
+  }
+  .btn_extracto {
+    position: relative;
+    margin: 0.6rem 0 0.45rem 0.25rem;
+    top: 0px;
+    left: 0px;
+  }
+  .excel_icon {
+    width: 18px;
+    height: 18px;
+  }
+}
