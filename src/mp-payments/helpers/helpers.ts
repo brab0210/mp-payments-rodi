@@ -16,6 +16,7 @@ export const miniNarrowResults = async function (response): Promise<Object> {
       description,
       charges_details,
       operation_type,
+      transaction_amount,
       transaction_amount_refunded,
       money_release_date,
       additional_info,
@@ -51,20 +52,14 @@ export const miniNarrowResults = async function (response): Promise<Object> {
 
     let { net_received_amount, total_paid_amount } = transaction_details;
 
-    let add_unit_price = 0;
+    let add_unit_price = 0.0;
 
     if (payer == null) {
-      if (additional_info.items && additional_info.items[0].unit_price) {
+      if (additional_info?.items) {
         additional_info.items.map(({ unit_price }) => {
-          add_unit_price += unit_price;
+          add_unit_price = add_unit_price + parseFloat(unit_price);
         });
       }
-    }
-    let test_fee_details;
-    if (payer == null && fee_details[0]?.amount == undefined) {
-      test_fee_details = 0;
-    } else {
-      test_fee_details = -fee_details[0]?.amount;
     }
 
     responseArray.push({
@@ -80,14 +75,17 @@ export const miniNarrowResults = async function (response): Promise<Object> {
       cuit:
         payer == null || payer == undefined ? '' : payer.identification?.number,
       description: description == null ? operation_type : description,
-      fee_details: test_fee_details,
+      fee_details: payer == null ? 0 : -fee_details[0]?.amount,
       charges_details_total: total,
       charges_details: newChargesDetails,
       transaction_amount_refunded: +transaction_amount_refunded * -1,
       net_received_amount:
-        payer == null ? -add_unit_price : +net_received_amount,
+        payer == null && add_unit_price != 0
+          ? -+add_unit_price
+          : -+net_received_amount,
+      //si es una compra le ponemos el signo negativo, y si es una venta usamos el campo transaction_amount porque ese es el original sin la financiacion que paga el comprador
       total_paid_amount:
-        payer == null ? -+total_paid_amount : +total_paid_amount,
+        payer == null ? -+total_paid_amount : +transaction_amount,
     });
   });
 

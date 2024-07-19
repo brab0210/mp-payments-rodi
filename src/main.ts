@@ -13,7 +13,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const logger = new Logger('Bootstrap');
 
-  app.useGlobalFilters(new Error404Filter());
+  //app.useGlobalFilters(new Error404Filter());
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -24,8 +24,8 @@ async function bootstrap() {
       },
     }),
   );
-  app.use(express.json({ limit: '50mb' }));
-  app.use(express.urlencoded({ limit: '50mb' }));
+  app.use(express.json({ limit: '500mb' }));
+  app.use(express.urlencoded({ limit: '500mb' }));
   app.use(
     session({
       secret: process.env.PASSWORD as string,

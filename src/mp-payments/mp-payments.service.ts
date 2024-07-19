@@ -105,7 +105,11 @@ export class MpPaymentsService {
       const baseData = {
         Fecha: fecha == null ? '' : fecha.split(' ')[0],
         Description: `${result.id} | ${result.description} | ${result.payer ? result.payer.identification?.number : ''}`,
-        Importe: +result.net_received_amount,
+        //si es una compra muestro el neto, y si es una venta, muestro el total
+        Importe:
+          result.payer == null
+            ? +result.net_received_amount
+            : +result.transaction_amount,
         Saldo: '',
       };
       resultsSheet.push(baseData);
