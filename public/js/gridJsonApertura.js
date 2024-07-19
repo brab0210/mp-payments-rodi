@@ -77,7 +77,7 @@ let gridApertura = new gridjs.Grid({
     }
     if (selectedValue.value == 'date_last_updated') {
       dataModificada = dataAperturaParse.resultados.filter(
-        (e) => e.transaction_amount_refunded > 0,
+        (e) => e.transaction_amount_refunded < 0,
       );
     }
     if (!dateApprovedCheckbox.checked) {

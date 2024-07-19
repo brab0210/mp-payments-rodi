@@ -2,7 +2,7 @@ async function getExcelApertura() {
   let data;
   if (selectedValue.value == 'date_last_updated') {
     data = dataAperturaParse.resultados.filter(
-      (e) => e.transaction_amount_refunded > 0,
+      (e) => e.transaction_amount_refunded < 0,
     );
   }
   if (
@@ -53,7 +53,7 @@ async function getExcelReducida() {
   let data;
   if (selectedValue.value == 'date_last_updated') {
     data = dataReducidaParse.results.filter(
-      (e) => e.transaction_amount_refunded > 0,
+      (e) => e.transaction_amount_refunded < 0,
     );
   }
   if (
@@ -104,7 +104,7 @@ async function getExcelExtracto() {
   let data;
   if (selectedValue.value == 'date_last_updated') {
     data = dataAperturaParse.resultados.filter(
-      (e) => e.transaction_amount_refunded > 0,
+      (e) => e.transaction_amount_refunded < 0,
     );
   }
   if (

@@ -48,13 +48,13 @@ export class MpPaymentsService {
 
   async oldDataRefundFilter(...args) {
     const reducida = await args[0].results.filter(
-      (e) => e.transaction_amount_refunded > 0,
+      (e) => e.transaction_amount_refunded < 0,
     );
     const apertura = await args[1].resultados.filter(
-      (e) => e.transaction_amount_refunded > 0,
+      (e) => e.transaction_amount_refunded < 0,
     );
     const original = await args[2].results.filter(
-      (e) => e.transaction_amount_refunded > 0,
+      (e) => e.transaction_amount_refunded < 0,
     );
     return { reducida, apertura, original };
   }

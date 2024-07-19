@@ -82,7 +82,7 @@ let grid = new gridjs.Grid({
     }
     if (selectedValue.value == 'date_last_updated') {
       dataModificada = dataReducidaParse.results.filter(
-        (e) => e.transaction_amount_refunded > 0,
+        (e) => e.transaction_amount_refunded < 0,
       );
     }
     if (!dateApprovedCheckbox.checked) {
