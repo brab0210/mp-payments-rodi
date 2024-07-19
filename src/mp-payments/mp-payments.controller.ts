@@ -89,7 +89,7 @@ export class MpPaymentsController {
       begin_date,
       end_date,
       orderOnlyApproved: 'true',
-      orderDate: 'false',
+      orderDate: 'money_release_date',
     };
     res.send(html_narrow(data, data2, data3, queryParams));
   }
@@ -116,8 +116,18 @@ export class MpPaymentsController {
     };
 
     //date_approved sin null
-    if (orderOnlyApproved == 'true') {
+    if (orderOnlyApproved == 'true' && orderDate != 'date_last_updated') {
       const dato = await this.mpPaymentsService.oldDataNullFilter(
+        reducida,
+        apertura,
+        original,
+      );
+      return res.send(
+        html_narrow(dato.reducida, dato.apertura, dato.original, queryParams),
+      );
+    }
+    if (orderDate == 'date_last_updated') {
+      const dato = await this.mpPaymentsService.oldDataRefundFilter(
         reducida,
         apertura,
         original,
@@ -130,39 +140,53 @@ export class MpPaymentsController {
     return res.send(html_narrow(reducida, apertura, original, queryParams));
   }
 
-  @Get('/downloadredu')
-  async excelDownloadReducida(@Query() queryParams, @Res() res: Response) {
-    let data = await this.mpPaymentsService.findAllNarrow(queryParams);
+  @Post('/downloadreducida')
+  async excelDownloadReducida(@Body() body: any, @Res() res: Response) {
+    let { data, params } = body;
 
-    let datos = await this.mpPaymentsService.excelReducida(data);
+    await this.mpPaymentsService.excelReducida(data);
+
     const filepath = join(__dirname, '..', '..', 'resultadoReducida.xlsx');
-    let leyendaExcel = await this.mpPaymentsService.leyendaExcel(queryParams);
+    let leyendaExcel = await this.mpPaymentsService.leyendaExcel(params);
+    let fileName = `${leyendaExcel}-Tabla_Reducida.xlsx`;
 
-    res.download(filepath, `${leyendaExcel}-Tabla_Reducida.xlsx`);
+    res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
+    res.download(filepath, fileName, (err) => {
+      if (err) {
+        console.error('Error al enviar el archivo');
+        res.status(500).send('error al descargar archivo');
+      } else {
+        console.log('archivo enviado correctamente');
+      }
+    });
   }
 
-  /* @Get('/downloadextracto')
-  async excelExtracto(@Query() queryParams, @Res() res: Response) {
-    let data = await this.mpPaymentsService.aperturaDeImpuestos(queryParams);
-    let datos = await this.mpPaymentsService.excelExtracto(data);
-    const filepath = join(__dirname, '..', '..', 'resultadoExtracto.xlsx');
+  @Post('/downloadapertura')
+  async excelDownloadApertura(@Body() body: any, @Res() res: Response) {
+    let { data, params } = body;
 
-    let leyendaExcel = await this.mpPaymentsService.leyendaExcel(queryParams);
+    await this.mpPaymentsService.excelApertura(data);
 
-    res.download(filepath, `${leyendaExcel}-Tabla_Extracto.xlsx`);
-  } */
+    const filepath = join(__dirname, '..', '..', 'resultadoApertura.xlsx');
+    let leyendaExcel = await this.mpPaymentsService.leyendaExcel(params);
+    let fileName = `${leyendaExcel}-Tabla_Apertura.xlsx`;
+
+    res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
+    res.download(filepath, fileName, (err) => {
+      if (err) {
+        console.error('Error al enviar el archivo');
+        res.status(500).send('error al descargar archivo');
+      } else {
+        console.log('archivo enviado correctamente');
+      }
+    });
+  }
 
   @Post('/download')
   async testExtracto(@Body() body: any, @Res() res: Response) {
     let { data, params } = body;
-    let datos;
-    if (params.orderDate == 'true') {
-      let orderDate = 'true';
-      datos = await this.mpPaymentsService.excelExtracto(data, orderDate);
-    } else {
-      let orderDate = 'false';
-      datos = await this.mpPaymentsService.excelExtracto(data, orderDate);
-    }
+    await this.mpPaymentsService.excelExtracto(data, params.orderDate);
+
     const filepath = join(__dirname, '..', '..', 'resultadoExtracto.xlsx');
     let leyendaExcel = await this.mpPaymentsService.leyendaExcel(params);
     let fileName = `${leyendaExcel}-Tabla_Extracto.xlsx`;

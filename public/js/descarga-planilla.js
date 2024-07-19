@@ -1,49 +1,123 @@
-function getExcelApertura() {
-  let date_ini = document.getElementById('date_ini');
-  let date_fin = document.getElementById('date_fin');
-  let orderApproved = document.getElementById('date_approved');
-
-  let begin_date = calcFecha(date_ini);
-  let end_date = calcFecha(date_fin, 'final');
-
-  let filterOrder;
-
-  if (orderApproved.checked) {
-    filterOrder = 'true';
-  } else {
-    filterOrder = 'false';
+async function getExcelApertura() {
+  let data;
+  if (selectedValue.value == 'date_last_updated') {
+    data = dataAperturaParse.resultados.filter(
+      (e) => e.transaction_amount_refunded > 0,
+    );
   }
-  const url = `/mp/download?begin_date=${begin_date}&end_date=${end_date}&orderDate=${selectedValue.value}&orderOnlyApproved=${filterOrder}`;
-  window.location.href = url;
-  return false;
+  if (
+    dateApprovedCheckbox.checked &&
+    selectedValue.value != 'date_last_updated'
+  ) {
+    data = dataAperturaParse.resultados.filter((e) => e.date_approved != null);
+  }
+
+  if (selectedValue.value == 'date_created' && !dateApprovedCheckbox.checked) {
+    data = dataAperturaParse.resultados.map((e) => e);
+  }
+
+  let testBody = { data, params };
+  try {
+    const response = await fetch(
+      `${window.location.origin}/mp/downloadapertura`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(testBody),
+      },
+    );
+
+    if (response.ok) {
+      const disposition = response.headers.get('Content-Disposition');
+      const fileName = disposition.split('filename=')[1].replace(/['"]/g, '');
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } else {
+      console.error('Error al generar el archivo');
+    }
+  } catch (error) {
+    console.error('Error en la solicitud de generación del archivo:', error);
+  }
 }
-function getExcelReducida() {
-  let date_ini = document.getElementById('date_ini');
-  let date_fin = document.getElementById('date_fin');
-  let orderApproved = document.getElementById('date_approved');
-
-  let begin_date = calcFecha(date_ini);
-  let end_date = calcFecha(date_fin, 'final');
-
-  let filterOrder;
-
-  if (orderApproved.checked) {
-    filterOrder = 'true';
-  } else {
-    filterOrder = 'false';
+async function getExcelReducida() {
+  let data;
+  if (selectedValue.value == 'date_last_updated') {
+    data = dataReducidaParse.results.filter(
+      (e) => e.transaction_amount_refunded > 0,
+    );
   }
-  const url = `/mp/downloadredu?begin_date=${begin_date}&end_date=${end_date}&orderDate=${selectedValue.value}&orderOnlyApproved=${filterOrder}`;
-  window.location.href = url;
-  return false;
+  if (
+    dateApprovedCheckbox.checked &&
+    selectedValue.value != 'date_last_updated'
+  ) {
+    data = dataReducidaParse.results.filter((e) => e.date_approved != null);
+  }
+
+  if (selectedValue.value == 'date_created' && !dateApprovedCheckbox.checked) {
+    data = dataReducidaParse.results.map((e) => e);
+  }
+  let testBody = { data, params };
+  try {
+    const response = await fetch(
+      `${window.location.origin}/mp/downloadreducida`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(testBody),
+      },
+    );
+
+    if (response.ok) {
+      const disposition = response.headers.get('Content-Disposition');
+      const fileName = disposition.split('filename=')[1].replace(/['"]/g, '');
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } else {
+      console.error('Error al generar el archivo');
+    }
+  } catch (error) {
+    console.error('Error en la solicitud de generación del archivo:', error);
+  }
 }
 
 async function getExcelExtracto() {
   let data;
-  if (dateApprovedCheckbox.checked) {
-    data = dataReducidaParse.results.filter((e) => e.date_approved != null);
-  } else {
-    data = dataReducidaParse.results.map((e) => e);
+  if (selectedValue.value == 'date_last_updated') {
+    data = dataAperturaParse.resultados.filter(
+      (e) => e.transaction_amount_refunded > 0,
+    );
   }
+  if (
+    dateApprovedCheckbox.checked &&
+    selectedValue.value != 'date_last_updated'
+  ) {
+    data = dataAperturaParse.resultados.filter((e) => e.date_approved != null);
+  }
+
+  if (selectedValue.value == 'date_created' && !dateApprovedCheckbox.checked) {
+    data = dataAperturaParse.resultados.map((e) => e);
+  }
+
   let testBody = { data, params };
   try {
     const response = await fetch(`${window.location.origin}/mp/download`, {

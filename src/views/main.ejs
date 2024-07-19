@@ -53,10 +53,10 @@
           <div class="col-md-2 col-lg-2 wrap-btn">            
             <button class="mt-2 col-sm-3 col-md-8 col-lg-8 btn" onclick="getFecha()" style="margin-left: 1.25rem;">Buscar</button>                        
           </div>
-          <!-- TODO: Agregar logica de chebkox solo y date update e implementar filtro solo por transaccion distinto 0 -->
+          
           <div class="col-md-4 col-lg-4 mt-1" style="margin-left: 1.15rem; font-size: 13px;">  
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="date_approved" <%= queryParams.orderOnlyApproved == "true" ? "checked" : "" %>>
+              <input class="form-check-input" type="checkbox" id="date_approved" <%= queryParams.orderOnlyApproved == "true" ? "checked" : "" %> disabled>
               <label for="date_approved">Solo operaciones aprobadas</label>                
             </div>    
             <select class="form-select form-select-sm" id="selectValue">
@@ -108,11 +108,9 @@
    
     <script  defer>    
     
-    let dateCreatedCheckbox = document.getElementById('date_created')
     let dateApprovedCheckbox = document.getElementById('date_approved')
-    let selectedValue = document.getElementById('selectValue');   
-    
-
+    let selectedValue = document.getElementById('selectValue');       
+      
     let params = {
       begin_date: '<%= queryParams.begin_date %>',
       end_date: '<%= queryParams.end_date %>',
@@ -123,37 +121,40 @@
     let spanEnd = document.getElementById('span_date_end')
 
     selectedValue.value = '<%=queryParams.orderDate %>' 
-
-   /*  if(dateApprovedCheckbox.checked){
-      dateApprovedCheckbox.disabled = false
-        spanBegin.innerHTML = "creación"
-          spanEnd.innerHTML = "creación"    }
-
-    if(!dateCreatedCheckbox.checked){
-      dateApprovedCheckbox.disabled = true
-
-          spanBegin.innerHTML = "liberación"          
-          spanEnd.innerHTML = "liberación"
-    } */
-      
+    caseOrderDate()
+  
     let dataReducidaParse = JSON.parse('<%- data %>');                             
-    let dataAperturaParse = JSON.parse('<%- data2 %>');               
+    let dataAperturaParse = JSON.parse('<%- data2 %>');   
+    
+        
+    selectedValue.addEventListener('change',(e)=>{
+      dateApprovedCheckbox.checked = true
+      dateApprovedCheckbox.disabled = true
+      caseOrderDate()      
+    })
 
-   /*  dateCreatedCheckbox.addEventListener('change', ()=>{
-      if(dateCreatedCheckbox.checked){
-        dateApprovedCheckbox.checked = true
-        dateApprovedCheckbox.disabled = false
-        spanBegin.innerHTML = "creación"
-        spanEnd.innerHTML = "creación"
+    function caseOrderDate(){
+      switch (selectedValue.value) {
+        case 'date_created':
+            changeText('creación')
+            dateApprovedCheckbox.disabled = false
+          break;
+        case 'date_approved':
+          changeText('aprobación')
+          break;
+        case 'money_release_date':
+          changeText('liberación')
+          break;
+        default:
+          changeText('devolución')
+          break;
       }
-      if(!dateCreatedCheckbox.checked){          
-        dateApprovedCheckbox.disabled = true
-        dateApprovedCheckbox.checked = true
-        spanBegin.innerHTML = "liberación"          
-        spanEnd.innerHTML = "liberación"
-      }
-    })     */
-     
+    }
+
+    function changeText(txt){
+      spanBegin.innerHTML = txt
+      spanEnd.innerHTML = txt
+    }    
       
     </script>
   </body>

@@ -46,9 +46,22 @@ export class MpPaymentsService {
     return { reducida, apertura, original };
   }
 
+  async oldDataRefundFilter(...args) {
+    const reducida = await args[0].results.filter(
+      (e) => e.transaction_amount_refunded > 0,
+    );
+    const apertura = await args[1].resultados.filter(
+      (e) => e.transaction_amount_refunded > 0,
+    );
+    const original = await args[2].results.filter(
+      (e) => e.transaction_amount_refunded > 0,
+    );
+    return { reducida, apertura, original };
+  }
+
   async excelReducida(data) {
     const resultsSheet = [];
-    data.results.forEach((result) => {
+    data.forEach((result) => {
       const baseData = {
         ID: result.id,
         'Date Created': result.date_created.split(' ')[0],
@@ -60,11 +73,16 @@ export class MpPaymentsService {
           result.money_release_date == null
             ? ''
             : result.money_release_date.split(' ')[0],
+        'Date Last Updated':
+          result.date_last_updated == null
+            ? ''
+            : result.date_last_updated.split(' ')[0],
         'Payment Type ID': result.payment_type_id,
-        CUIT: result.cuit,
+        CUIT: result.cuit ? result.cuit : '',
         Description: result.description,
-        'Fee Amount': +result.fee_amount,
+        'Fee Amount': +result.fee_details,
         'Total Charges': +result.charges_details_total,
+        'Trans. Amount Refund': +result.transaction_amount_refunded,
         'Net Received Amount': +result.net_received_amount,
         'Total Paid Amount': +result.total_paid_amount,
       };
@@ -80,20 +98,14 @@ export class MpPaymentsService {
 
   async excelExtracto(data, orderDate) {
     const resultsSheet = [];
+
     data.forEach((result) => {
       let fecha;
-      if (orderDate == 'true') {
-        fecha = result.date_created;
-      }
-      if ((orderDate = 'false')) {
-        fecha = result.money_release_date;
-      }
-
+      fecha = result[orderDate];
       const baseData = {
         Fecha: fecha == null ? '' : fecha.split(' ')[0],
         Description: `${result.id} | ${result.description} | ${result.payer ? result.payer.identification?.number : ''}`,
         Importe: +result.net_received_amount,
-
         Saldo: '',
       };
       resultsSheet.push(baseData);
@@ -114,7 +126,36 @@ export class MpPaymentsService {
     return leyendaExcel;
   }
 
-  async filtrosExtractoBancarios(data, queryParams) {
-    //console.log({ body: data });
+  async excelApertura(data) {
+    const resultsSheet = [];
+    data.forEach((result) => {
+      const baseData = {
+        ID: result.id,
+        'Date Created': result.date_created.split(' ')[0],
+        'Date Approved':
+          result.date_approved == null
+            ? ''
+            : result.date_approved.split(' ')[0],
+        'Money Release Date':
+          result.money_release_date == null
+            ? ''
+            : result.money_release_date.split(' ')[0],
+        'Date Last Updated':
+          result.date_last_updated == null
+            ? ''
+            : result.date_last_updated.split(' ')[0],
+        Description: result.description,
+        'Trans. Amount Refund': +result.transaction_amount_refunded,
+        'Net Received Amount': +result.net_received_amount,
+        'Total Paid Amount': +result.total_paid_amount,
+      };
+      resultsSheet.push(baseData);
+    });
+
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(resultsSheet);
+    XLSX.utils.book_append_sheet(wb, ws, 'Tabla Apertura');
+    await XLSX.writeFileXLSX(wb, 'resultadoApertura.xlsx');
+    //return result;
   }
 }

@@ -75,13 +75,11 @@ export const miniNarrowResults = async function (response): Promise<Object> {
         payer == null || payer == undefined ? '' : payer.identification?.number,
       description: description == null ? operation_type : description,
       fee_details:
-        fee_details[0]?.amount == undefined && payer == null
-          ? 0
-          : fee_details[0]?.amount,
+        fee_details[0]?.amount == undefined ? 0 : -fee_details[0]?.amount,
 
       charges_details_total: total,
       charges_details: newChargesDetails,
-      transaction_amount_refunded,
+      transaction_amount_refunded: +transaction_amount_refunded * -1,
       net_received_amount:
         payer == null ? -add_unit_price : +net_received_amount,
       total_paid_amount:
@@ -110,6 +108,7 @@ export const funcAperturaImpuestos = async (res) => {
       date_last_updated,
       charges_details,
       charges_details_total,
+      transaction_amount_refunded,
       net_received_amount,
       total_paid_amount,
     } = res.results[index];
@@ -121,6 +120,7 @@ export const funcAperturaImpuestos = async (res) => {
       date_last_updated,
       description,
       payer,
+      transaction_amount_refunded,
       net_received_amount,
       total_paid_amount,
     });
@@ -135,6 +135,7 @@ export const funcAperturaImpuestos = async (res) => {
             : null,
         money_release_date,
         description: 'IMPUESTO: ' + charge.type + ' | ' + charge.name,
+        transaction_amount_refunded: '',
         net_received_amount: +charge.amount,
         total_paid_amount: '',
       });
@@ -270,15 +271,19 @@ export const html_narrow = (data, data2, data3, queryParams) => `
           
           <div class="col-md-4 col-lg-4 mt-1" style="margin-left: 1.15rem; font-size: 13px;">  
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="date_approved" ${queryParams.orderOnlyApproved == 'true' ? 'checked' : ''}>
+              <input class="form-check-input" type="checkbox" id="date_approved" ${queryParams.orderOnlyApproved == 'true' ? 'checked' : ''} disabled>
               <label for="date_approved">Solo operaciones aprobadas</label>                
-            </div>          
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="date_created" ${queryParams.orderDate == 'true' ? 'checked' : ''}>              
-              <label id="label_date_created" for="date_created">Por fecha de creación</label>
-            </div>
+            </div>    
+            <select class="form-select form-select-sm" id="selectValue">
+              <option selected>Seleccionar filtro por fecha</option>
+              <option value="date_created">Creación</option>
+              <option value="date_approved">Aprobación</option>
+              <option value="money_release_date">Liberación</option>
+              <option value="date_last_updated">Devolución</option>
+            </select>      
+          
           </div>
-        </div>    
+        </div>     
       
 
       <div class="mt-4 ms-2">
@@ -316,39 +321,44 @@ jsonGrid2.render();
 jsonGrid3.render();
 
 
- let dateApprovedCheckbox = document.getElementById('date_approved')
- let dateCreatedCheckbox = document.getElementById('date_created')
+let dateApprovedCheckbox = document.getElementById('date_approved')
+let selectedValue = document.getElementById('selectValue'); 
 
- let spanBegin = document.getElementById('span_date_begin')
- let spanEnd = document.getElementById('span_date_end')
+let spanBegin = document.getElementById('span_date_begin')
+let spanEnd = document.getElementById('span_date_end')
 
-  dateApprovedCheckbox.disabled = true
+ selectedValue.value = "${queryParams.orderDate}"
+ caseOrderDate()
+    
+  selectedValue.addEventListener('change',(e)=>{
+    dateApprovedCheckbox.checked = true
+    dateApprovedCheckbox.disabled = true
+    caseOrderDate()      
+  })
 
-    if(dateApprovedCheckbox.checked){
-      dateApprovedCheckbox.disabled = false
-        spanBegin.innerHTML = "creación"
-          spanEnd.innerHTML = "creación"    }
-
-    if(!dateCreatedCheckbox.checked){
-          spanBegin.innerHTML = "liberación"          
-          spanEnd.innerHTML = "liberación"
+  function caseOrderDate(){
+      switch (selectedValue.value) {
+        case 'date_created':
+            changeText('creación')
+            dateApprovedCheckbox.disabled = false
+          break;
+        case 'date_approved':
+          changeText('aprobación')
+          break;
+        case 'money_release_date':
+          changeText('liberación')
+          break;
+        default:
+          changeText('devolución')
+          break;
+      }
     }
-  
-      dateCreatedCheckbox.addEventListener('change', ()=>{
-        if(dateCreatedCheckbox.checked){
-         dateApprovedCheckbox.checked = true
-         dateApprovedCheckbox.disabled = false
-          spanBegin.innerHTML = "creación"
-          spanEnd.innerHTML = "creación"
 
-        }
-        if(!dateCreatedCheckbox.checked){          
-         dateApprovedCheckbox.disabled = true
-          dateApprovedCheckbox.checked = true
-          spanBegin.innerHTML = "liberación"          
-          spanEnd.innerHTML = "liberación"
-        }
-      })
+    function changeText(txt){
+      spanBegin.innerHTML = txt
+      spanEnd.innerHTML = txt
+    }    
+      
        function goHome() {
       window.location.href = '/mp';
     }

@@ -58,7 +58,12 @@ let gridApertura = new gridjs.Grid({
       name: 'Money Release Date',
       width: '184px',
     },
+    {
+      name: 'Date Last Updated',
+      width: '184px',
+    },
     'Description',
+    'Trans. Amount Refunded',
     'Net Received Amount',
     'Total Paid Amount',
   ],
@@ -66,18 +71,26 @@ let gridApertura = new gridjs.Grid({
   data: () => {
     let dataModificada;
     if (dateApprovedCheckbox.checked) {
-      dataModificada = dataReducidaParse.results.filter(
+      dataModificada = dataAperturaParse.resultados.filter(
         (e) => e.date_approved != null,
       );
-    } else {
-      dataModificada = dataReducidaParse.results.map((e) => e);
+    }
+    if (selectedValue.value == 'date_last_updated') {
+      dataModificada = dataAperturaParse.resultados.filter(
+        (e) => e.transaction_amount_refunded > 0,
+      );
+    }
+    if (!dateApprovedCheckbox.checked) {
+      dataModificada = dataAperturaParse.resultados.map((e) => e);
     }
     return dataModificada.map((item) => [
       item.id,
       item.date_created,
       item.date_approved,
       item.money_release_date,
+      item.date_last_updated,
       item.description,
+      item.transaction_amount_refunded,
       item.net_received_amount,
       item.total_paid_amount,
     ]);

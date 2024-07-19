@@ -68,7 +68,7 @@ let grid = new gridjs.Grid({
     'Description',
     'Fee Amount',
     'Total Charges',
-    'Transaction Amount Refunded',
+    'Trans. Amount Refunded',
     'Net Received Amount',
     'Total Paid Amount',
   ],
