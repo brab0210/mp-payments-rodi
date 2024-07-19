@@ -60,6 +60,12 @@ export const miniNarrowResults = async function (response): Promise<Object> {
         });
       }
     }
+    let test_fee_details;
+    if (payer == null && fee_details[0]?.amount == undefined) {
+      test_fee_details = 0;
+    } else {
+      test_fee_details = -fee_details[0]?.amount;
+    }
 
     responseArray.push({
       id,
@@ -74,9 +80,7 @@ export const miniNarrowResults = async function (response): Promise<Object> {
       cuit:
         payer == null || payer == undefined ? '' : payer.identification?.number,
       description: description == null ? operation_type : description,
-      fee_details:
-        fee_details[0]?.amount == undefined ? 0 : -fee_details[0]?.amount,
-
+      fee_details: test_fee_details,
       charges_details_total: total,
       charges_details: newChargesDetails,
       transaction_amount_refunded: +transaction_amount_refunded * -1,
