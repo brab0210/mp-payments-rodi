@@ -34,7 +34,7 @@ export const miniNarrowResults = async function (response): Promise<Object> {
           type: charge.type,
         });
         total = total + charge.amounts.original;
-        total = total * -1;
+        // total = total * -1;
       } else if (payer && charge.accounts.from == 'collector') {
         newChargesDetails.push({
           name: charge.name,
@@ -46,19 +46,25 @@ export const miniNarrowResults = async function (response): Promise<Object> {
           type: charge.type,
         });
         total = total + charge.amounts.original;
-        total = total * -1;
+        // total = total * -1;
       }
-    });
-
+    
+    }
+    
+    
+  );
+  total = total * -1;
     let { net_received_amount, total_paid_amount } = transaction_details;
 
     let add_unit_price = 0.0;
 
-    if (payer == null) {
+    if (payer == null ) {
       if (additional_info?.items) {
         additional_info.items.map(({ unit_price }) => {
           add_unit_price = add_unit_price + parseFloat(unit_price);
         });
+      }else {
+        add_unit_price = net_received_amount;
       }
     }
 
@@ -74,15 +80,17 @@ export const miniNarrowResults = async function (response): Promise<Object> {
         date_last_updated != null ? formatoDeFecha(date_last_updated) : null,
       cuit:
         payer == null || payer == undefined ? '' : payer.identification?.number,
+      payer,
       description: description == null ? operation_type : description,
-      fee_details: payer == null ? 0 : -fee_details[0]?.amount,
+      fee_details: payer == null ? '': -fee_details[0]?.amount,
       charges_details_total: total,
       charges_details: newChargesDetails,
-      transaction_amount_refunded: +transaction_amount_refunded * -1,
+      transaction_amount: transaction_amount == 0 ? '' : +transaction_amount,
+      transaction_amount_refunded: transaction_amount_refunded == 0 ? ''  : +transaction_amount_refunded * -1,
       net_received_amount:
-        payer == null && add_unit_price != 0
+        payer == null /* && add_unit_price != 0 */
           ? -+add_unit_price
-          : -+net_received_amount,
+          : +net_received_amount,
       //si es una compra le ponemos el signo negativo, y si es una venta usamos el campo transaction_amount porque ese es el original sin la financiacion que paga el comprador
       total_paid_amount:
         payer == null ? -+total_paid_amount : +transaction_amount,
@@ -110,6 +118,7 @@ export const funcAperturaImpuestos = async (res) => {
       date_last_updated,
       charges_details,
       charges_details_total,
+      transaction_amount,
       transaction_amount_refunded,
       net_received_amount,
       total_paid_amount,
@@ -122,6 +131,7 @@ export const funcAperturaImpuestos = async (res) => {
       date_last_updated,
       description,
       payer,
+      transaction_amount,
       transaction_amount_refunded,
       net_received_amount,
       total_paid_amount,
@@ -140,6 +150,7 @@ export const funcAperturaImpuestos = async (res) => {
         transaction_amount_refunded: '',
         net_received_amount: +charge.amount,
         total_paid_amount: '',
+        transaction_amount: '',
       });
     });
   }

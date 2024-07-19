@@ -13,7 +13,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const logger = new Logger('Bootstrap');
 
-  //app.useGlobalFilters(new Error404Filter());
+  app.useGlobalFilters(new Error404Filter());
 
   app.useGlobalPipes(
     new ValidationPipe({

@@ -84,7 +84,9 @@ export class MpPaymentsService {
         'Total Charges': +result.charges_details_total,
         'Trans. Amount Refund': +result.transaction_amount_refunded,
         'Net Received Amount': +result.net_received_amount,
-        'Total Paid Amount': +result.total_paid_amount,
+        'Total Paid Amount':          result.payer == null
+        ? +result.net_received_amount
+        : +result.transaction_amount,
       };
       resultsSheet.push(baseData);
     });
@@ -151,10 +153,14 @@ export class MpPaymentsService {
         Description: result.description,
         'Trans. Amount Refund': +result.transaction_amount_refunded,
         'Net Received Amount': +result.net_received_amount,
-        'Total Paid Amount': +result.total_paid_amount,
+        'Total Paid Amount':          result.payer == null
+        ? +result.net_received_amount
+        : +result.transaction_amount,
       };
+
       resultsSheet.push(baseData);
     });
+    console.log(resultsSheet);
 
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet(resultsSheet);
